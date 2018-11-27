@@ -7,6 +7,8 @@
 #include <memory>
 
 namespace fs {
+
+
 	// Filesystem class
 	class Filesystem {
 	public:

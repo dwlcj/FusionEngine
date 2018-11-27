@@ -146,6 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\ptx_compiler\ptx_compiler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\ptx_compiler\test_ptx_compiler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
