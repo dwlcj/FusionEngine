@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{233C0B0F-2C54-4038-9E63-6F5F5D9C6397}</ProjectGuid>
+    <ProjectGuid>{4FBF4291-7D7C-4631-BF07-F0FC232EA4D3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Filesystem</RootNamespace>
+    <RootNamespace>Scene</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -37,7 +37,6 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\props\assimp_x64_vc14_debug.props" />
     <Import Project="..\props\OptiX5.1.1.props" />
     <Import Project="..\props\cuda_92.props" />
   </ImportGroup>
@@ -49,7 +48,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)include;$(SolutionDir)include/ext;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -62,6 +60,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)include/ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -87,13 +86,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\filesystem\assimp_loader.h" />
-    <ClInclude Include="..\include\filesystem\filesystem.h" />
-    <ClInclude Include="..\include\filesystem\scene_loader.h" />
-    <ClInclude Include="..\include\filesystem\scene_loader_adapter.h" />
+    <ClInclude Include="..\include\scene\material.h" />
+    <ClInclude Include="..\include\scene\mesh.h" />
+    <ClInclude Include="..\include\scene\scene.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\filesystem\test_filesystem.cpp" />
+    <ClCompile Include="..\src\scene\test_scene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

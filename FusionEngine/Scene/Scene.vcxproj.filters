@@ -15,21 +15,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\filesystem\filesystem.h">
+    <ClInclude Include="..\include\scene\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\filesystem\assimp_loader.h">
+    <ClInclude Include="..\include\scene\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\filesystem\scene_loader_adapter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\filesystem\scene_loader.h">
+    <ClInclude Include="..\include\scene\material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\filesystem\test_filesystem.cpp">
+    <ClCompile Include="..\src\scene\test_scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
