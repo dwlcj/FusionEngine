@@ -12,12 +12,14 @@ namespace fs {
 	public:
 		explicit Filesystem();
 		void load3DFile(const std::string& filepath);
+		void loadPTXFile(const std::string& filepath);
 		// Load 3D files
 		// Load Video files
 		// Load/Save Project's state
 	private:
 		std::shared_ptr<fs::SceneLoader> sceneLoader;
 		// VideoLoader
+		// PTX loader
 		// StateLoader?
 	};
 

@@ -15,7 +15,6 @@ int main(int argc, char* argv[]) {
 	//-----------------
 	plog::ColorConsoleAppender<plog::TxtFormatter> app;
 	plog::init(plog::debug, &app);
-
 	std::shared_ptr<fs::Filesystem> fsystem =
 		std::make_shared<fs::Filesystem>();
 	fsystem->load3DFile(std::string("D:\\_Media\\3Dmodels\\nbbeg1gg19-Iron_Man_update1\\Iron_Man_update1\\Iron_Man.obj"));
