@@ -41,7 +41,8 @@ namespace ptx {
 			const bool& useFastMath, 
 			const bool& rdc, 
 			const std::vector<std::string>& includeDirs, 
-			const std::string& conf);
+			const std::string& conf,
+			const std::string& platform);
 		const std::uint8_t cudaArch() const { return mCudaArch; }
 		const bool useFastMath() const { return mUseFastMath; }
 		const bool rdc() const { return mRdc; }
@@ -52,12 +53,19 @@ namespace ptx {
 		void setHostPlatform(const std::string& platform);
 		void setUseFastMath(const bool& use);
 		void setRdc(const bool& use);
+		void setCompileConfiguration(const std::string& conf);
 		const std::string compileStr(const std::string& filepath);
 		void compileFile(const std::string& filepath);
 	protected:
 		const bool readSrcFile(const std::experimental::filesystem::path& filepath, std::string& srcStr);
 		const std::string cuStrFromFile(const std::experimental::filesystem::path& filepath);
-		const std::vector<std::string> includeDirsToStr();
+		const std::string includeDirsToStr() const;
+		const std::string compilerOptions() const;
+		const std::string archOption() const;
+		const std::string useFastMathOption() const;
+		const std::string rdcOption() const;
+		const std::string configPlatformOption() const;
+		const int numOptions() const;
 	private:
 		std::uint8_t mCudaArch;
 		Platform mPlatform;
@@ -66,6 +74,25 @@ namespace ptx {
 		bool mRdc;
 		std::vector<std::experimental::filesystem::path> mIncludeDirs;
 	};
+
+	/*!
+	*/
+	PTXCompiler::PTXCompiler(
+		const std::uint8_t& arch, 
+		const bool& useFastMath, 
+		const bool& rdc, 
+		const std::vector<std::string>& includeDirs, 
+		const std::string& conf,
+		const std::string& platform) 
+		: mCudaArch(arch), mUseFastMath(useFastMath), mRdc(rdc)
+	{ 
+		for (std::vector<std::string>::const_iterator it = includeDirs.begin();
+			it != includeDirs.end(); ++it) {
+			mIncludeDirs.emplace_back(std::experimental::filesystem::path(*it));
+		}
+		setHostPlatform(platform);
+		setCompileConfiguration(conf);
+	}
 
 	/*! returns compiler include directories as vector of strings
 	*/
@@ -91,6 +118,20 @@ namespace ptx {
 			return std::string("Release");
 		default:
 			return std::string("None");
+		}
+	}
+
+	/*! sets compiling configuration
+	*/
+	void PTXCompiler::setCompileConfiguration(const std::string& conf) {
+		if (conf == "Debug") {
+			mConfiguration = CompileConf::Debug;
+		}
+		else if (conf == "Release") {
+			mConfiguration == CompileConf::Release;
+		}
+		else {
+			mConfiguration = CompileConf::None;
 		}
 	}
 
@@ -154,8 +195,68 @@ namespace ptx {
 		if (readSrcFile(filepath, cuStr)) {
 			return cuStr;
 		}
-		LOG_ERROR << "Bad filepath or file: " << filepath;
+		LOG_ERROR << "Bad filepath or file: " << filepath.generic_string();
 		return "";
+	}
+
+	/*! Returns include paths in one string
+	*/
+	const std::string PTXCompiler::includeDirsToStr() const {
+		std::string dirs;
+		for (std::vector<std::experimental::filesystem::path>::const_iterator it = mIncludeDirs.begin();
+			it != mIncludeDirs.end(); ++it) {
+			dirs.append("-I" + it->generic_string() + " ");
+		}
+		return dirs;
+	}
+
+	/*! Returns cuda architecture (cli) option
+	*/
+	const std::string PTXCompiler::archOption() const {
+		return std::string("-arch=compute_" + std::to_string(mCudaArch));
+	}
+
+	/*! Returns use fast math (cli) option
+	*/
+	const std::string PTXCompiler::useFastMathOption() const {
+		if (mUseFastMath) {
+			return std::string("-use_fast_math");
+		}
+		return std::string("");
+	}
+
+	const std::string PTXCompiler::rdcOption() const {
+		if (mRdc) {
+			return std::string("-rdc=true");
+		}
+		return std::string("-rdc=false");
+	}
+
+	const std::string PTXCompiler::configPlatformOption() const {
+		if (mPlatform == Platform::x64 && mConfiguration == CompileConf::Debug) {
+			return std::string("-D__x86_64 0");
+		}
+		return std::string("");
+	}
+
+	const int PTXCompiler::numOptions() const {
+		int numOptions = 0;
+		numOptions += mIncludeDirs.size();
+		numOptions += 5; // arch, fast math, rdc, config-Platform, default-device
+		return numOptions;
+	}
+
+	/*! Returns all compiler options as a string
+	*/
+	const std::string PTXCompiler::compilerOptions() const {
+		std::string options;
+		options.append(archOption() + " ");
+		options.append(useFastMathOption() + " ");
+		options.append(std::string("-default-device "));
+		options.append(rdcOption() + " ");
+		options.append(configPlatformOption() + " ");
+		options.append(includeDirsToStr());
+		return options;
 	}
 
 	/*! compiles .cu file returns compiled (ptx) content as string
@@ -163,32 +264,35 @@ namespace ptx {
 	const std::string PTXCompiler::compileStr(const std::string& filepath) {
 		std::experimental::filesystem::path cuFilepath(filepath);
 		std::string cuSrc = cuStrFromFile(cuFilepath);
+		LOG_DEBUG << cuSrc;
 		// create nvrtc program
 		nvrtcProgram prog = 0;
-		const nvrtcResult prog_creation_res = nvrtcCreateProgram(&prog, cuSrc.c_str(), cuFilepath.c_str(), 0, NULL, NULL);
+		const nvrtcResult prog_creation_res = nvrtcCreateProgram(&prog, cuSrc.c_str(), filepath.c_str(), 0, NULL, NULL);
 		if (prog_creation_res != NVRTC_SUCCESS) {
 			LOG_ERROR << "PTX compiling failed (Cannot create NVRTC Program). file: " << filepath;
 			throw std::exception();
 		}
-		std::vector<const char*> nvrtc_options;												// nvrtc compilation options
-		std::vector<std::string> nvrtc_include_dirs = get_nvrtc_includes();					// get nvrtc include dirs
-		const std::string incl_base = "-I" + cu_filepath.parent_path().generic_string();	// add cu file's base dir to nvrtc inclide paths
-		nvrtc_include_dirs.emplace_back(incl_base.c_str());
+		//std::vector<const char*> nvrtc_options;												// nvrtc compilation options
+		LOG_DEBUG << compilerOptions();
+		std::string cOptions = compilerOptions();
+		const char* options = cOptions.c_str();
+		const char* const * nvrtc_options =  &options;
+		//std::vector<std::string> nvrtc_include_dirs = get_nvrtc_includes();					// get nvrtc include dirs
+		//const std::string incl_base = "-I" + cuFilepath.parent_path().generic_string();	// add cu file's base dir to nvrtc inclide paths
+		//nvrtc_include_dirs.emplace_back(incl_base.c_str());
 
 		// ptx code as string, ptx compilation log
 		std::string ptx, compilation_log;
-
 		// fill nvrtc compilation options
-		for (int i = 0; i < nvrtc_compiler_options.size(); i++) {
-			nvrtc_options.emplace_back(nvrtc_compiler_options[i].c_str());
-		}
-		for (int i = 0; i < nvrtc_include_dirs.size(); i++) {
-			nvrtc_options.emplace_back(nvrtc_include_dirs[i].c_str());
-		}
-
+		//for (int i = 0; i < nvrtc_compiler_options.size(); i++) {
+		//	nvrtc_options.emplace_back(nvrtc_compiler_options[i].c_str());
+		//}
+		//for (int i = 0; i < nvrtc_include_dirs.size(); i++) {
+		//	nvrtc_options.emplace_back(nvrtc_include_dirs[i].c_str());
+		//}
 		// compile cu to ptx
-		const nvrtcResult compile_res = nvrtcCompileProgram(prog, (int)nvrtc_options.size(), nvrtc_options.data());
-
+		//const nvrtcResult compile_res = nvrtcCompileProgram(prog, (int)nvrtc_options.size(), nvrtc_options.data());
+		const nvrtcResult compile_res = nvrtcCompileProgram(prog, numOptions(), nvrtc_options);
 		// retrieve compilation log
 		std::size_t log_size = 0;
 		const nvrtcResult log_sz_res = nvrtcGetProgramLogSize(prog, &log_size);
@@ -200,7 +304,7 @@ namespace ptx {
 			LOG_FATAL << "PTX compilation failed.";
 			LOG_DEBUG << "\tCompilation Log: {";
 			LOG_DEBUG << "\t" + compilation_log;
-			LOG_DEBUG << "\t}";
+			LOG_DEBUG << "}";
 			throw std::exception();
 		}
 		// retrieve ptx code
@@ -208,165 +312,8 @@ namespace ptx {
 		const nvrtcResult nvrtc_ptx_size_res = nvrtcGetPTXSize(prog, &ptx_size);
 		ptx.resize(ptx_size);
 		const nvrtcResult nvrtc_ptx_res = nvrtcGetPTX(prog, &ptx[0]);
-
 		return ptx;
 	}
-
-
-
-	//------------------------------------
-	//		NVRTC Compiler Options
-	//------------------------------------
-	// TODO: MUST CHANGE these are hard coded paths. Must find a generic way
-	static std::vector<std::string> nvrtc_compiler_options = {
-		"-arch=compute_30 ",
-		"-use_fast_math ",
-		"-default-device ",
-		"-rdc=true ",
-		"-D__x86_64 ",
-		"-IC:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.2/include",
-		"-ID:\\_dev\\_Projects\\_Visual_Studio\\360Fuzio\\360_fuzion\\src\\core\\CUDA",
-		"-IC:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v8.0\\include"
-	};
-
-	//-----------------------------------------------------
-	//	searches for CUDA directories to 
-	//	add to nvrtc compilation include dirs
-	//	Returns a string with cmd nvrtc compilation options
-	//------------------------------------------------------
-	// TODO: MUST CHANGE the paths are hard coded and must find generic solution
-	static const std::string get_nvrtc_options() {
-		return std::string("-arch=compute_52 -use_fast_math -default-device -rdc=true -D__x86_64 0 ");
-	}
-
-	//------------------------------------
-	//	Returns nvrtc include paths
-	//------------------------------------
-	// TODO: MUST CHANGE the paths are hard coded and must find generic solution
-	static const std::vector<std::string> get_nvrtc_includes() {
-		std::vector<std::string> include_dirs;
-
-#ifdef CERTH
-		include_dirs.emplace_back("-ID:\\_dev\\_Projects\\_Visual_Studio\\360Fuzio\\360_fuzion\\dependencies\\NVIDIA\\Optix51\\include");
-		include_dirs.emplace_back("-ID:\\_dev\\_Projects\\_Visual_Studio\\360Fuzio\\360_fuzion\\dependencies\\NVIDIA\\Optix51\\\\optixu");
-		include_dirs.emplace_back("-ID:\\_dev\\_Projects\\_Visual_Studio\\360Fuzio\\360_fuzion\\dependencies\\NVIDIA\\Optix51\\mdl-sdk\\include");
-		include_dirs.emplace_back("-ID:\\_dev\\_Projects\\_Visual_Studio\\360Fuzio\\360_fuzion\\dependencies\\ptx");
-		include_dirs.emplace_back("-ID:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
-		include_dirs.emplace_back("-IC:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.2/include");
-#else
-		include_dirs.emplace_back("-IE:\\_dev\\_Projects\\360Fuzion\\360_fuzion\\dependencies\\NVIDIA\\Optix51\\include");
-		include_dirs.emplace_back("-IE:\\_dev\\_Projects\\360Fuzion\\360_fuzion\\dependencies\\NVIDIA\\Optix51\\include\\optixu");
-		include_dirs.emplace_back("-IE:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\SDK\\cuda");
-		include_dirs.emplace_back("-IE:\\_dev\\_Projects\\360Fuzion\\360_fuzion\\dependencies\\ptx");
-		include_dirs.emplace_back("-IE:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
-		include_dirs.emplace_back("-IC:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/include");
-		//include_dirs.emplace_back("-IE:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
-#endif
-
-		return include_dirs;
-	}
-
-	//---------------------------------------------------
-	// Reads a source file and puts the src in a string
-	// return bool if successful
-	//---------------------------------------------------
-	static bool read_src_file(std::string& src, const filesystem::path& src_filepath) {
-		std::ifstream file(src_filepath);
-		if (file.good()) {
-			// source file exists
-			std::stringstream src_buffer;
-			src_buffer << file.rdbuf();
-			src = src_buffer.str();
-			return true;
-		}
-		// bad path or file
-		return false;
-	}
-
-
-	//---------------------------------------------
-	// Reads a source file
-	// Returns the source file's text as a string
-	//----------------------------------------------
-	static std::string cu_str_from_file(const  filesystem::path& cu_filepath) {
-		std::string cu_src_str;
-		if (read_src_file(cu_src_str, cu_filepath)) {
-			// source file read successfully
-			return cu_src_str;
-		}
-		// bad path or file
-		LOG_FATAL << "File { " << cu_filepath.generic_string() << " } doesn't exist or is broken.";
-		return "";
-	}
-
-	//-------------------------------------------
-	// reads cu source file
-	// compiles it to ptx
-	// returns ptx code as string
-	//--------------------------------------------
-	static std::string ptx_from_cu(const std::string& cu_filename, const std::string& location) {
-		if (cu_filename.empty()) {
-			LOG_FATAL << "Given filepath is empty.";
-			throw std::exception();
-		}
-		std::experimental::filesystem::path fs_location(location);
-		//std::experimental::filesystem::path fs_location 
-		std::experimental::filesystem::path cu_filepath = fs_location.append(cu_filename);
-
-		// read source file
-		std::string cu_src = cu_str_from_file(cu_filepath);
-
-		// create nvrtc program
-		nvrtcProgram prog = 0;
-		const nvrtcResult prog_creation_res = nvrtcCreateProgram(&prog, cu_src.c_str(), location.c_str(), 0, NULL, NULL);
-		if (prog_creation_res != NVRTC_SUCCESS) {
-			LOG_FATAL << "PTX program creation failed.";
-			throw std::exception();
-		}
-
-		std::vector<const char*> nvrtc_options;												// nvrtc compilation options
-		std::vector<std::string> nvrtc_include_dirs = get_nvrtc_includes();					// get nvrtc include dirs
-		const std::string incl_base = "-I" + cu_filepath.parent_path().generic_string();	// add cu file's base dir to nvrtc inclide paths
-		nvrtc_include_dirs.emplace_back(incl_base.c_str());
-
-		// ptx code as string, ptx compilation log
-		std::string ptx, compilation_log;
-
-		// fill nvrtc compilation options
-		for (int i = 0; i < nvrtc_compiler_options.size(); i++) {
-			nvrtc_options.emplace_back(nvrtc_compiler_options[i].c_str());
-		}
-		for (int i = 0; i < nvrtc_include_dirs.size(); i++) {
-			nvrtc_options.emplace_back(nvrtc_include_dirs[i].c_str());
-		}
-
-		// compile cu to ptx
-		const nvrtcResult compile_res = nvrtcCompileProgram(prog, (int)nvrtc_options.size(), nvrtc_options.data());
-
-		// retrieve compilation log
-		std::size_t log_size = 0;
-		const nvrtcResult log_sz_res = nvrtcGetProgramLogSize(prog, &log_size);
-		compilation_log.resize(log_size);
-		if (log_size > 1) {
-			const nvrtcResult log_res = nvrtcGetProgramLog(prog, &compilation_log[0]);
-		}
-		if (compile_res != NVRTC_SUCCESS) {
-			LOG_FATAL << "PTX compilation failed.";
-			LOG_DEBUG << "\tCompilation Log: {";
-			LOG_DEBUG << "\t" + compilation_log;
-			LOG_DEBUG << "\t}";
-			throw std::exception();
-		}
-		// retrieve ptx code
-		std::size_t ptx_size = 0;
-		const nvrtcResult nvrtc_ptx_size_res = nvrtcGetPTXSize(prog, &ptx_size);
-		ptx.resize(ptx_size);
-		const nvrtcResult nvrtc_ptx_res = nvrtcGetPTX(prog, &ptx[0]);
-
-		return ptx;
-	}
-
-
 }
 #endif // !_INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
 
