@@ -2,7 +2,9 @@
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
 #include <plog/Log.h>
+
 #include <ptx_compiler/ptx_compiler.h>
+
 #include <memory>
 #include <string>
 
@@ -15,6 +17,7 @@ int main(int argc, char* argv[]) {
 
 	std::shared_ptr<ptx::PTXCompiler> compiler =
 		std::make_shared<ptx::PTXCompiler>();
+#ifdef CERTH
 	compiler->setCudaArch(30);
 	compiler->setHostPlatform("x64");
 	compiler->setCompileConfiguration("Debug");
@@ -27,5 +30,19 @@ int main(int argc, char* argv[]) {
 	compiler->addIncludeDir("D:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
 	compiler->addIncludeDir("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.2/include");
 	std::string ptx = compiler->compileStr("D:\\_dev\\_Libraries\\NVIDIA\\OptiX511\\SDK\\cuda\\phong.cu");
+#else
+	compiler->setCudaArch(30);
+	compiler->setHostPlatform("x64");
+	compiler->setCompileConfiguration("Debug");
+	compiler->setRdc(true);
+	compiler->setUseFastMath(true);
+	compiler->addIncludeDir("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\SDK\\cuda");
+	compiler->addOptiXIncludeDir("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
+	compiler->addIncludeDir("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v8.0\\include");
+	std::string ptx = compiler->compileStr("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\SDK\\cuda\\phong.cu", "phong");
+#endif // CERTH
+
+	
 	LOG_DEBUG << ptx;
+	return std::getchar();
 }

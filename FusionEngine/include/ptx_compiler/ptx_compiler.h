@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
 #define _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
 
-#define CERTH
+//#define CERTH
 // CUDA
 #include <nvrtc.h>
 
@@ -49,18 +49,17 @@ namespace ptx {
 		const std::vector<std::string> includeDirs() const;
 		const std::string configuration() const;
 		void addIncludeDir(const std::string& dir);
+		void addOptiXIncludeDir(const std::string& dir);
 		void setCudaArch(const std::uint8_t& arch);
 		void setHostPlatform(const std::string& platform);
 		void setUseFastMath(const bool& use);
 		void setRdc(const bool& use);
 		void setCompileConfiguration(const std::string& conf);
-		const std::string compileStr(const std::string& filepath);
+		const std::string compileStr(const std::string& filepath, const std::string& progName);
 		void compileFile(const std::string& filepath);
 	protected:
 		const bool readSrcFile(const std::experimental::filesystem::path& filepath, std::string& srcStr);
 		const std::string cuStrFromFile(const std::experimental::filesystem::path& filepath);
-		const std::string includeDirsToStr() const;
-		const std::string compilerOptions() const;
 		const std::string archOption() const;
 		const std::string useFastMathOption() const;
 		const std::string rdcOption() const;
@@ -73,6 +72,9 @@ namespace ptx {
 		bool mUseFastMath;
 		bool mRdc;
 		std::vector<std::experimental::filesystem::path> mIncludeDirs;
+		std::vector<std::experimental::filesystem::path> mOptiXIncludeDirs;
+		std::vector<std::string> mInclude;
+		
 	};
 
 	/*!
@@ -100,7 +102,11 @@ namespace ptx {
 		std::vector<std::string> dirs;
 		for (std::vector<std::experimental::filesystem::path>::const_iterator it = mIncludeDirs.begin();
 			it != mIncludeDirs.end(); ++it) {
-			dirs.emplace_back(it->generic_string());
+			dirs.emplace_back("-I" + it->generic_string());
+		}
+		for (std::vector<std::experimental::filesystem::path>::const_iterator it = mOptiXIncludeDirs.begin();
+			it != mOptiXIncludeDirs.end(); ++it) {
+			dirs.emplace_back("-I" + it->generic_string());
 		}
 		return dirs;
 	}
@@ -139,6 +145,9 @@ namespace ptx {
 	*/
 	void PTXCompiler::addIncludeDir(const std::string& dir) {
 		mIncludeDirs.emplace_back(std::experimental::filesystem::path(dir));
+	}
+	void PTXCompiler::addOptiXIncludeDir(const std::string& dir) {
+		mOptiXIncludeDirs.emplace_back(std::experimental::filesystem::path(dir));
 	}
 
 	/*! sets Cuda Compute Capabitlity
@@ -199,69 +208,74 @@ namespace ptx {
 		return "";
 	}
 
-	/*! Returns include paths in one string
-	*/
-	const std::string PTXCompiler::includeDirsToStr() const {
-		std::string dirs;
-		for (std::vector<std::experimental::filesystem::path>::const_iterator it = mIncludeDirs.begin();
-			it != mIncludeDirs.end(); ++it) {
-			dirs.append("-I" + it->generic_string() + " ");
-		}
-		return dirs;
-	}
+
 
 	/*! Returns cuda architecture (cli) option
 	*/
 	const std::string PTXCompiler::archOption() const {
-		return std::string("-arch=compute_" + std::to_string(mCudaArch));
+		return std::string("--gpu-architecture=compute_" + std::to_string(mCudaArch));
+		//return std::string("");
 	}
 
 	/*! Returns use fast math (cli) option
 	*/
 	const std::string PTXCompiler::useFastMathOption() const {
 		if (mUseFastMath) {
-			return std::string("-use_fast_math");
+			return std::string("--use_fast_math");
 		}
 		return std::string("");
 	}
 
 	const std::string PTXCompiler::rdcOption() const {
 		if (mRdc) {
-			return std::string("-rdc=true");
+			return std::string("--relocatable-device-code=true");
 		}
-		return std::string("-rdc=false");
+		return std::string("--relocatable-device-code=false");
 	}
 
 	const std::string PTXCompiler::configPlatformOption() const {
 		if (mPlatform == Platform::x64 && mConfiguration == CompileConf::Debug) {
-			return std::string("-D__x86_64 0");
+			return std::string("-D__x86_64");
 		}
 		return std::string("");
 	}
 
 	const int PTXCompiler::numOptions() const {
 		int numOptions = 0;
+		// arch option
+		numOptions ++;
+		if (mUseFastMath) {
+			numOptions++;
+		}
+		if (mRdc) {
+			numOptions++;
+		}
+		// device as default
+		numOptions++;
+		// Config Platform
+		numOptions++;
 		numOptions += mIncludeDirs.size();
-		numOptions += 5; // arch, fast math, rdc, config-Platform, default-device
+		numOptions += mOptiXIncludeDirs.size();
 		return numOptions;
 	}
 
 	/*! Returns all compiler options as a string
 	*/
-	const std::string PTXCompiler::compilerOptions() const {
-		std::string options;
-		options.append(archOption() + " ");
-		options.append(useFastMathOption() + " ");
-		options.append(std::string("-default-device "));
-		options.append(rdcOption() + " ");
-		options.append(configPlatformOption() + " ");
-		options.append(includeDirsToStr());
-		return options;
-	}
+	//std::vector<const char*> PTXCompiler::compilerOptions() const {
+	//	
+	//		archOption().c_str(),
+	//		useFastMathOption().c_str(),
+	//		std::string("--device-as-default-execution-space").c_str(),
+	//		rdcOption().c_str(),
+	//		configPlatformOption().c_str(),
+	//		includeDirsToStr().c_str()
+	//	};
+	//	return options;
+	//}
 
 	/*! compiles .cu file returns compiled (ptx) content as string
 	*/
-	const std::string PTXCompiler::compileStr(const std::string& filepath) {
+	const std::string PTXCompiler::compileStr(const std::string& filepath, const std::string& progName) {
 		std::experimental::filesystem::path cuFilepath(filepath);
 		std::string cuSrc = cuStrFromFile(cuFilepath);
 		LOG_DEBUG << cuSrc;
@@ -270,29 +284,27 @@ namespace ptx {
 		const nvrtcResult prog_creation_res = nvrtcCreateProgram(&prog, cuSrc.c_str(), filepath.c_str(), 0, NULL, NULL);
 		if (prog_creation_res != NVRTC_SUCCESS) {
 			LOG_ERROR << "PTX compiling failed (Cannot create NVRTC Program). file: " << filepath;
-			throw std::exception();
 		}
-		//std::vector<const char*> nvrtc_options;												// nvrtc compilation options
-		LOG_DEBUG << compilerOptions();
-		std::string cOptions = compilerOptions();
-		const char* options = cOptions.c_str();
-		const char* const * nvrtc_options =  &options;
-		//std::vector<std::string> nvrtc_include_dirs = get_nvrtc_includes();					// get nvrtc include dirs
-		//const std::string incl_base = "-I" + cuFilepath.parent_path().generic_string();	// add cu file's base dir to nvrtc inclide paths
-		//nvrtc_include_dirs.emplace_back(incl_base.c_str());
-
+		// Unlikable workaround to use compolier options
+		std::vector<const char*> options;
+		mInclude = includeDirs();
+		const std::string arch = archOption();
+		const std::string fastMath = useFastMathOption();
+		const std::string devDef("--device-as-default-execution-space");
+		const std::string confPlat = configPlatformOption();
+		const std::string rdc = rdcOption();
+		options.emplace_back(arch.c_str());
+		options.emplace_back(fastMath.c_str());
+		options.emplace_back(devDef.c_str());
+		options.emplace_back(confPlat.c_str());
+		options.emplace_back(rdc.c_str());
+		for (std::vector<std::string>::const_iterator it = mInclude.begin();
+			it != mInclude.end(); ++it) {
+			options.emplace_back(it->c_str());
+		}
 		// ptx code as string, ptx compilation log
 		std::string ptx, compilation_log;
-		// fill nvrtc compilation options
-		//for (int i = 0; i < nvrtc_compiler_options.size(); i++) {
-		//	nvrtc_options.emplace_back(nvrtc_compiler_options[i].c_str());
-		//}
-		//for (int i = 0; i < nvrtc_include_dirs.size(); i++) {
-		//	nvrtc_options.emplace_back(nvrtc_include_dirs[i].c_str());
-		//}
-		// compile cu to ptx
-		//const nvrtcResult compile_res = nvrtcCompileProgram(prog, (int)nvrtc_options.size(), nvrtc_options.data());
-		const nvrtcResult compile_res = nvrtcCompileProgram(prog, numOptions(), nvrtc_options);
+		const nvrtcResult compile_res = nvrtcCompileProgram(prog, (int)options.size(), options.data());
 		// retrieve compilation log
 		std::size_t log_size = 0;
 		const nvrtcResult log_sz_res = nvrtcGetProgramLogSize(prog, &log_size);
@@ -305,13 +317,13 @@ namespace ptx {
 			LOG_DEBUG << "\tCompilation Log: {";
 			LOG_DEBUG << "\t" + compilation_log;
 			LOG_DEBUG << "}";
-			throw std::exception();
 		}
 		// retrieve ptx code
 		std::size_t ptx_size = 0;
 		const nvrtcResult nvrtc_ptx_size_res = nvrtcGetPTXSize(prog, &ptx_size);
 		ptx.resize(ptx_size);
 		const nvrtcResult nvrtc_ptx_res = nvrtcGetPTX(prog, &ptx[0]);
+		nvrtcDestroyProgram(&prog);
 		return ptx;
 	}
 }
