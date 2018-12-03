@@ -39,10 +39,8 @@ int main(int argc, char* argv[]) {
 	compiler->addIncludeDir("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\SDK\\cuda");
 	compiler->addOptiXIncludeDir("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
 	compiler->addIncludeDir("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v8.0\\include");
-	std::string ptx = compiler->compileStr("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\SDK\\cuda\\phong.cu", "phong");
+	std::string ptx = compiler->compileStr("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\SDK\\cuda\\phong.cu");
 #endif // CERTH
-
-	
 	LOG_DEBUG << ptx;
 	return std::getchar();
 }

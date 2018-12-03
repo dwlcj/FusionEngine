@@ -14,6 +14,8 @@ namespace fs {
 	public:
 		explicit Filesystem();
 		void load3DFile(const std::string& filepath);
+		// TODO: Maybe ptx file loading is not needed in the filesystem because
+		// OptiX can load ptx files itself
 		void loadPTXFile(const std::string& filepath);
 		// Load 3D files
 		// Load Video files

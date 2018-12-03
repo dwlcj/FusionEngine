@@ -1,7 +1,6 @@
 #ifndef _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
 #define _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
-
-//#define CERTH
+#define CERTH
 // CUDA
 #include <nvrtc.h>
 
@@ -14,7 +13,8 @@
 #include <sstream>
 
 namespace ptx {
-	/*! Host Platforms
+	/**
+	*	Available Host Platforms
 	*/
 	enum class Platform : std::size_t {
 		None = 0,
@@ -22,7 +22,8 @@ namespace ptx {
 		x64
 	};
 
-	/*! Compile Configurations
+	/**
+	*	Compile Configurations
 	*/
 	enum class CompileConf : std::size_t {
 		None = 0,
@@ -30,9 +31,10 @@ namespace ptx {
 		Release
 	};
 
-	/*! PTX compiler
-		provides an interface to compile .cu files to ptx
-		as well as many utlities regarding .cu and .ptx files
+	/**
+	*	PTX compiler
+	*	provides an interface to compile .cu files to ptx
+	*	as well as many utlities regarding .cu and .ptx files
 	*/
 	class PTXCompiler {
 	public:
@@ -40,7 +42,8 @@ namespace ptx {
 		explicit PTXCompiler(const std::uint8_t& arch, 
 			const bool& useFastMath, 
 			const bool& rdc, 
-			const std::vector<std::string>& includeDirs, 
+			const std::vector<std::string>& includeDirs,
+			const std::vector<std::string>& OptixIncludeDirs,
 			const std::string& conf,
 			const std::string& platform);
 		const std::uint8_t cudaArch() const { return mCudaArch; }
@@ -55,8 +58,8 @@ namespace ptx {
 		void setUseFastMath(const bool& use);
 		void setRdc(const bool& use);
 		void setCompileConfiguration(const std::string& conf);
-		const std::string compileStr(const std::string& filepath, const std::string& progName);
-		void compileFile(const std::string& filepath);
+		const std::string compileStr(const std::string& filepath);
+		void compileFile(const std::string& cuFilepath, const std::string& outputFilepath);
 	protected:
 		const bool readSrcFile(const std::experimental::filesystem::path& filepath, std::string& srcStr);
 		const std::string cuStrFromFile(const std::experimental::filesystem::path& filepath);
@@ -64,7 +67,6 @@ namespace ptx {
 		const std::string useFastMathOption() const;
 		const std::string rdcOption() const;
 		const std::string configPlatformOption() const;
-		const int numOptions() const;
 	private:
 		std::uint8_t mCudaArch;
 		Platform mPlatform;
@@ -77,13 +79,15 @@ namespace ptx {
 		
 	};
 
-	/*!
+	/**
+	*	Initializes member fields
 	*/
 	PTXCompiler::PTXCompiler(
 		const std::uint8_t& arch, 
 		const bool& useFastMath, 
 		const bool& rdc, 
-		const std::vector<std::string>& includeDirs, 
+		const std::vector<std::string>& includeDirs,
+		const std::vector<std::string>& optixIncludeDirs,
 		const std::string& conf,
 		const std::string& platform) 
 		: mCudaArch(arch), mUseFastMath(useFastMath), mRdc(rdc)
@@ -92,11 +96,16 @@ namespace ptx {
 			it != includeDirs.end(); ++it) {
 			mIncludeDirs.emplace_back(std::experimental::filesystem::path(*it));
 		}
+		for (std::vector<std::string>::const_iterator it = optixIncludeDirs.begin();
+			it != optixIncludeDirs.end(); ++it) {
+			mOptiXIncludeDirs.emplace_back(std::experimental::filesystem::path(*it));
+		}
 		setHostPlatform(platform);
 		setCompileConfiguration(conf);
 	}
 
-	/*! returns compiler include directories as vector of strings
+	/**
+	*	returns compiler include directories as vector of strings
 	*/
 	const std::vector<std::string> PTXCompiler::includeDirs() const {
 		std::vector<std::string> dirs;
@@ -111,7 +120,8 @@ namespace ptx {
 		return dirs;
 	}
 
-	/*! Return Compiler Confguration as string
+	/**
+	*	Return Compiler Confguration as string
 	*/
 	const std::string PTXCompiler::configuration() const {
 		switch (mConfiguration)
@@ -127,7 +137,8 @@ namespace ptx {
 		}
 	}
 
-	/*! sets compiling configuration
+	/**
+	*	sets compiling configuration
 	*/
 	void PTXCompiler::setCompileConfiguration(const std::string& conf) {
 		if (conf == "Debug") {
@@ -141,7 +152,8 @@ namespace ptx {
 		}
 	}
 
-	/* adds include directory to compiler options
+	/**
+	*	adds include directory to compiler options
 	*/
 	void PTXCompiler::addIncludeDir(const std::string& dir) {
 		mIncludeDirs.emplace_back(std::experimental::filesystem::path(dir));
@@ -150,13 +162,15 @@ namespace ptx {
 		mOptiXIncludeDirs.emplace_back(std::experimental::filesystem::path(dir));
 	}
 
-	/*! sets Cuda Compute Capabitlity
+	/**
+	*	sets Cuda Compute Capabitlity
 	*/
 	void PTXCompiler::setCudaArch(const std::uint8_t& arch) {
 		mCudaArch = arch;
 	}
 
-	/*! sets host platform arch x86 or x64
+	/**
+	*	sets host platform arch x86 or x64
 	*/
 	void PTXCompiler::setHostPlatform(const std::string& platform) {
 		if (platform == "x86") {
@@ -170,19 +184,22 @@ namespace ptx {
 		}
 	}
 
-	/*! modifies use fast math option
+	/**
+	*	modifies use fast math option
 	*/
 	void PTXCompiler::setUseFastMath(const bool& use) {
 		mUseFastMath = use;
 	}
 
-	/*! modifies rdc option
+	/**
+	*	modifies rdc option
 	*/
 	void PTXCompiler::setRdc(const bool& use) {
 		mRdc = use;
 	}
 
-	/*! reads a .txt file and returns its content as string 
+	/**
+	*	reads a .txt file and returns its content as string 
 	*/
 	const bool PTXCompiler::readSrcFile(const std::experimental::filesystem::path& filepath, std::string& srcStr) {
 		std::ifstream file(filepath);
@@ -197,7 +214,8 @@ namespace ptx {
 		return false;
 	}
 
-	/*! reads .cu file and returns content as string
+	/**
+	*	reads .cu file and returns content as string
 	*/
 	const std::string PTXCompiler::cuStrFromFile(const std::experimental::filesystem::path& filepath) {
 		std::string cuStr;
@@ -210,14 +228,16 @@ namespace ptx {
 
 
 
-	/*! Returns cuda architecture (cli) option
+	/**
+	*	Returns cuda architecture (cli) option
 	*/
 	const std::string PTXCompiler::archOption() const {
 		return std::string("--gpu-architecture=compute_" + std::to_string(mCudaArch));
 		//return std::string("");
 	}
 
-	/*! Returns use fast math (cli) option
+	/**
+	*	Returns use fast math (cli) option
 	*/
 	const std::string PTXCompiler::useFastMathOption() const {
 		if (mUseFastMath) {
@@ -226,6 +246,9 @@ namespace ptx {
 		return std::string("");
 	}
 
+	/**
+	*	return rdc option as string
+	*/
 	const std::string PTXCompiler::rdcOption() const {
 		if (mRdc) {
 			return std::string("--relocatable-device-code=true");
@@ -233,6 +256,9 @@ namespace ptx {
 		return std::string("--relocatable-device-code=false");
 	}
 
+	/**
+	*	Returns Compiler Configuration and Platform cli option
+	*/
 	const std::string PTXCompiler::configPlatformOption() const {
 		if (mPlatform == Platform::x64 && mConfiguration == CompileConf::Debug) {
 			return std::string("-D__x86_64");
@@ -240,42 +266,9 @@ namespace ptx {
 		return std::string("");
 	}
 
-	const int PTXCompiler::numOptions() const {
-		int numOptions = 0;
-		// arch option
-		numOptions ++;
-		if (mUseFastMath) {
-			numOptions++;
-		}
-		if (mRdc) {
-			numOptions++;
-		}
-		// device as default
-		numOptions++;
-		// Config Platform
-		numOptions++;
-		numOptions += mIncludeDirs.size();
-		numOptions += mOptiXIncludeDirs.size();
-		return numOptions;
-	}
-
-	/*! Returns all compiler options as a string
-	*/
-	//std::vector<const char*> PTXCompiler::compilerOptions() const {
-	//	
-	//		archOption().c_str(),
-	//		useFastMathOption().c_str(),
-	//		std::string("--device-as-default-execution-space").c_str(),
-	//		rdcOption().c_str(),
-	//		configPlatformOption().c_str(),
-	//		includeDirsToStr().c_str()
-	//	};
-	//	return options;
-	//}
-
 	/*! compiles .cu file returns compiled (ptx) content as string
 	*/
-	const std::string PTXCompiler::compileStr(const std::string& filepath, const std::string& progName) {
+	const std::string PTXCompiler::compileStr(const std::string& filepath) {
 		std::experimental::filesystem::path cuFilepath(filepath);
 		std::string cuSrc = cuStrFromFile(cuFilepath);
 		LOG_DEBUG << cuSrc;
@@ -325,6 +318,16 @@ namespace ptx {
 		const nvrtcResult nvrtc_ptx_res = nvrtcGetPTX(prog, &ptx[0]);
 		nvrtcDestroyProgram(&prog);
 		return ptx;
+	}
+
+	/**
+	*	Compiles ptx and saves ptx file
+	*/
+	void PTXCompiler::compileFile(const std::string& cuFilepath, const std::string& outputFilepath) {
+		const std::string ptxStr = compileStr(cuFilepath);
+		std::ofstream fileHandle(outputFilepath, std::ofstream::out);
+		fileHandle << ptxStr;
+		fileHandle.close();
 	}
 }
 #endif // !_INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
