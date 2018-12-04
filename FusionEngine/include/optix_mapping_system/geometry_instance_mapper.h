@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_MAPPER_H_
-#define _INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_MAPPER_H_
+#ifndef _INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_INSTANCE_MAPPER_H_
+#define _INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_INSTANCE_MAPPER_H_
 
 // OptiX
 #include <optixu/optixpp_namespace.h>
@@ -8,25 +8,25 @@
 
 // scene
 #include <optix_mapping_system/mapper.h>
-#include <scene/mesh.h>
+#include <scene/material.h>
 
 namespace map {
-	class GeometryMapper : public Mapper<optix::Geometry, scene::Mesh> {
+	class GinstanceMapper : public Mapper<optix::GeometryInstance, optix::Geometry, scene::Material> {
 	public:
-		explicit GeometryMapper(
+		explicit GinstanceMapper(
 			optix::Context& ctx,
 			const std::string& bboxProgCuFilepath,
 			const std::string& interProgCuFilepath);
-		explicit GeometryMapper(
+		explicit GinstanceMapper(
 			optix::Context& ctx,
 			const optix::Program& bboxProg,
 			const optix::Program& intersectionProg);
-		const optix::Geometry map(const scene::Mesh& mesh);
+		const optix::GeometryInstance map(const optix::Geometry& geometry, const scene::Material& mesh);
+
 	private:
 		optix::Program mBboxProgram;
 		optix::Program mIntersectionProgram;
-		
+
 	};
 }	//	!namespace map
-#endif // !_INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_MAPPER_H_
-
+#endif // !_INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_INSTANCE_MAPPER_H_
