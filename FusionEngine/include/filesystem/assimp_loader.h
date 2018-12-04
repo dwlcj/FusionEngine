@@ -150,7 +150,7 @@ namespace fs {
 		aiColor3D* amb;
 		float shin;
 		optix::float3 matDiff, matSpec, matRad, matAmb;
-		optix::float1 matShin;
+		float matShin;
 		// get name
 		if (m->Get(AI_MATKEY_NAME, name) != aiReturn_SUCCESS) {
 			LOG_DEBUG << "Material does not have a name";
@@ -186,10 +186,10 @@ namespace fs {
 		}
 		// get shininess
 		if (m->Get(AI_MATKEY_SHININESS, shin) == aiReturn_SUCCESS) {
-			matShin = optix::make_float1(shin);
+			matShin = shin;
 		}
 		else {
-			matShin = optix::make_float1(0.0f);
+			matShin = 0.0f;
 		}
 		return scene::Material(name, matDiff, matSpec, matRad, matAmb, matShin);
 	}

@@ -29,7 +29,9 @@ int main(int argc, char* argv[]) {
 	compiler->addIncludeDir("D:\\_dev\\_Projects\\_Visual_Studio\\360Fuzio\\360_fuzion\\dependencies\\ptx");
 	compiler->addIncludeDir("D:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
 	compiler->addIncludeDir("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.2/include");
-	std::string ptx = compiler->compileStr("D:\\_dev\\_Libraries\\NVIDIA\\OptiX511\\SDK\\cuda\\phong.cu");
+	compiler->addIncludeDir("..\\src\\optix_mapping_system\\CUDA");
+	//std::string ptx = compiler->compileStr("D:\\_dev\\_Libraries\\NVIDIA\\OptiX511\\SDK\\cuda\\phong.cu");
+	compiler->compileFile("D:\\_dev\\_Libraries\\NVIDIA\\OptiX511\\SDK\\cuda\\triangle_mesh.cu", "..\\src\\optix_mapping_system\\CUDA\\triangle_mesh.ptx");
 #else
 	compiler->setCudaArch(30);
 	compiler->setHostPlatform("x64");
@@ -41,6 +43,7 @@ int main(int argc, char* argv[]) {
 	compiler->addIncludeDir("C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v8.0\\include");
 	std::string ptx = compiler->compileStr("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\SDK\\cuda\\phong.cu");
 #endif // CERTH
-	LOG_DEBUG << ptx;
+
+	//LOG_DEBUG << ptx;
 	return std::getchar();
 }

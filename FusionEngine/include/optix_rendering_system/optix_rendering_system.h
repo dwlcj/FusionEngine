@@ -29,7 +29,7 @@ namespace rt {
 			const std::size_t& width, 
 			const std::size_t& height, 
 			const unsigned int& launchIndex = 0u);
-		void update(const unsigned int& launchIndex);
+		void render(const unsigned int& launchIndex);
 	protected:
 		void createPboBuffer();
 	private:
@@ -47,7 +47,7 @@ namespace rt {
 		optix::Context& ctx, 
 		const std::size_t& width, 
 		const std::size_t& height, 
-		const unsigned int& launchIndex = 0u) 
+		const unsigned int& launchIndex) 
 		: mContext(ctx), mLaunchWidth(width), mLaunchHeight(height)
 	{ 
 		createPboBuffer();
@@ -86,7 +86,7 @@ namespace rt {
 	/** To be called in the game loop
 	*	Renders the scene
 	*/
-	void OptiXRenderer::update(const unsigned int& launchIndex) {
+	void OptiXRenderer::render(const unsigned int& launchIndex) {
 		mContext->launch(launchIndex, mLaunchWidth, mLaunchHeight);
 		// Query buffer info
 		RTsize bufferWRts, bufferHRts;
