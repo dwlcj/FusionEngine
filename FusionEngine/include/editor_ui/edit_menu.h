@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_EDITOR_UI_EDIT_MENU_H_
-#define _INCLUDE_EDITOR_UI_EDIT_MENU_H_
+#ifndef INCLUDE_EDITOR_UI_EDIT_MENU_H
+#define INCLUDE_EDITOR_UI_EDIT_MENU_H
 /// ImGui
 #include <imgui/imgui.h>
 /// Fusion
@@ -30,5 +30,5 @@ namespace ui {
 		}
 	}
 }
-#endif // !_INCLUDE_EDITOR_UI_EDIT_MENU_H_
+#endif // !INCLUDE_EDITOR_UI_EDIT_MENU_H
 

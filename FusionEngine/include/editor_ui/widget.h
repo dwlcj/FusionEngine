@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_EDITOR_UI_WIDGET_H_
-#define _INCLUDE_EDITOR_UI_WIDGET_H_
+#ifndef INCLUDE_EDITOR_UI_WIDGET_H
+#define INCLUDE_EDITOR_UI_WIDGET_H
 namespace ui {
 	namespace widget {
 		class Widget {
@@ -8,5 +8,5 @@ namespace ui {
 		};
 	}	//	!namespace widget
 }	//	!namspace ui
-#endif // !_INCLUDE_EDITOR_UI_WIDGET_H_
+#endif // !INCLUDE_EDITOR_UI_WIDGET_H
 

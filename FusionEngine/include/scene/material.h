@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_SCENE_MATERIAL_H_
-#define _INCLUDE_SCENE_MATERIAL_H_
+#ifndef INCLUDE_SCENE_MATERIAL_H
+#define INCLUDE_SCENE_MATERIAL_H
 
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
@@ -59,6 +59,6 @@ namespace scene {
 		return Material(std::string("default"), def, def, def, def, 0.0f);
 	}
 }	//	!namespace scene
-#endif // !_INCLUDE_SCENE_MATERIAL_H_
+#endif // !INCLUDE_SCENE_MATERIAL_H
 
 

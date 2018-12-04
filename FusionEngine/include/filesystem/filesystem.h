@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_FILESYSTEM_FILESYSTEM_H_
-#define _INCLUDE_FILESYSTEM_FILESYSTEM_H_
+#ifndef INCLUDE_FILESYSTEM_FILESYSTEM_H
+#define INCLUDE_FILESYSTEM_FILESYSTEM_H
 /// Fusion
 #include <filesystem/scene_loader.h>
 #include <filesystem/scene_loader_adapter.h>
@@ -37,4 +37,4 @@ namespace fs {
 	}
 
 }	// !namespace fs
-#endif	//!_INCLUDE_FILESYSTEM_FILESYSTEM_H_
+#endif	//!INCLUDE_FILESYSTEM_FILESYSTEM_H

@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_FILESYSTEM_ASSIMP_LOADER_H_
-#define _INCLUDE_FILESYSTEM_ASSIMP_LOADER_H_
+#ifndef INCLUDE_FILESYSTEM_ASSIMP_LOADER_H
+#define INCLUDE_FILESYSTEM_ASSIMP_LOADER_H
 
 #include <optixu/optixu_aabb_namespace.h>
 #include <optixu/optixu_math_namespace.h>
@@ -212,5 +212,5 @@ namespace fs {
 	}
 
 }	// !namespace fs
-#endif // !_INCLUDE_FILESYSTEM_ASSIMP_LOADER_H_
+#endif // !INCLUDE_FILESYSTEM_ASSIMP_LOADER_H
 

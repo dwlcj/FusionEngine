@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fusion", "Fusion\Fusion.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EditorUI", "EditorUI\EditorUI.vcxproj", "{1DD3767F-20C4-4315-90CF-79B55207F4B1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommSystem", "CommSystem\CommSystem.vcxproj", "{72FF344E-C81A-4C59-810D-AF7DCFAF8530}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -69,6 +71,12 @@ Global
 		{1DD3767F-20C4-4315-90CF-79B55207F4B1}.Release|x64.Build.0 = Release|x64
 		{1DD3767F-20C4-4315-90CF-79B55207F4B1}.Release|x86.ActiveCfg = Release|Win32
 		{1DD3767F-20C4-4315-90CF-79B55207F4B1}.Release|x86.Build.0 = Release|Win32
+		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Debug|x64.ActiveCfg = Debug|x64
+		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Debug|x64.Build.0 = Debug|x64
+		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Debug|x86.ActiveCfg = Debug|x64
+		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Release|x64.ActiveCfg = Release|x64
+		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Release|x64.Build.0 = Release|x64
+		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

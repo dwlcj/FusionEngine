@@ -1,36 +1,21 @@
-#ifndef _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
-#define _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
+#ifndef INCLUDE_PTX_COMPILER_PTX_COMPILER_H
+#define INCLUDE_PTX_COMPILER_PTX_COMPILER_H
 #define CERTH
 #define DEBUG
 /// CUDA
 #include <nvrtc.h>
 /// Logging
 #include <plog/Log.h>
+/// Fusion
+#include <ptx_compiler/ptx_compiler_flags.h>
+#include <comm_system/ptx_compiler_message.h>
 /// STL
 #include <string>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-
+#include <functional>
 namespace ptx {
-	/**
-	*	Available Host Platforms
-	*/
-	enum class Platform : std::size_t {
-		None = 0,
-		x86,
-		x64
-	};
-
-	/**
-	*	Compile Configurations
-	*/
-	enum class CompileConf : std::size_t {
-		None = 0,
-		Debug,
-		Release
-	};
-
 	/**
 	*	PTX compiler
 	*	provides an interface to compile .cu files to ptx
@@ -60,6 +45,7 @@ namespace ptx {
 		void setCompileConfiguration(const std::string& conf);
 		const std::string compileStr(const std::string& filepath);
 		void compileFile(const std::string& cuFilepath, const std::string& outputFilepath);
+		std::function<void(const comm::PTXCompilerMessage&)> messageFlowIn();
 	protected:
 		const bool readSrcFile(const std::experimental::filesystem::path& filepath, std::string& srcStr);
 		const std::string cuStrFromFile(const std::experimental::filesystem::path& filepath);
@@ -331,6 +317,19 @@ namespace ptx {
 		fileHandle.close();
 #endif // DEBUG
 	}
-}
-#endif // !_INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
+
+	/**
+	*	Message Subscription function
+	*/
+	std::function<void(const comm::PTXCompilerMessage&)> PTXCompiler::messageFlowIn() {
+		return [this](const comm::PTXCompilerMessage& mess) {
+			setHostPlatform(mess.platform());
+			setCompileConfiguration(mess.compilerConfiguration());
+			setCudaArch(mess.cudaArch());
+			setRdc(mess.rdc());
+			setUseFastMath(mess.fastMath());
+		};
+	}
+}	//	!namespace ptx
+#endif // !INCLUDE_PTX_COMPILER_PTX_COMPILER_H
 

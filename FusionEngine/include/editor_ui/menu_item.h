@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_EDITOR_UI_MENU_BAR_ITEM_H_
-#define _INCLUDE_EDITOR_UI_MENU_BAR_ITEM_H_
+#ifndef INCLUDE_EDITOR_UI_MENU_BAR_ITEM_H
+#define INCLUDE_EDITOR_UI_MENU_BAR_ITEM_H
 
 namespace ui {
 
@@ -9,5 +9,5 @@ namespace ui {
 	};
 
 }	//	!namespace ui
-#endif // !_INCLUDE_EDITOR_UI_MENU_ITEM_H_
+#endif // !INCLUDE_EDITOR_UI_MENU_ITEM_H
 

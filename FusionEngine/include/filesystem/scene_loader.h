@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_FILESYSTEM_SCENE_LOADER_H_
-#define _INCLUDE_FILESYSTEM_SCENE_LOADER_H_
+#ifndef INCLUDE_FILESYSTEM_SCENE_LOADER_H
+#define INCLUDE_FILESYSTEM_SCENE_LOADER_H
 
 #include <string>
 
@@ -10,4 +10,4 @@ namespace fs {
 		virtual void loadFile(const std::string& filepath) = 0;
 	};
 }
-#endif // !_INCLUDE_FILESYSTEM_SCENE_LOADER_H_
+#endif // !INCLUDE_FILESYSTEM_SCENE_LOADER_H

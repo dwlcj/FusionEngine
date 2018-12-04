@@ -32,5 +32,17 @@
     <ClInclude Include="..\include\editor_ui\edit_menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\editor_ui\widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\editor_ui\ptx_compiler_widget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\editor_ui\pop_up.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\editor_ui\file_eplorer_popup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

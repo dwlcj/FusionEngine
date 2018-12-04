@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_SCENE_SCENE_H_
-#define _INCLUDE_SCENE_SCENE_H_
+#ifndef INCLUDE_SCENE_SCENE_H
+#define INCLUDE_SCENE_SCENE_H
 
 #include <optixu/optixu_aabb_namespace.h>
 #include <optixu/optixu_math_namespace.h>
@@ -49,5 +49,5 @@ namespace scene {
 		mMaterials.emplace_back(m);
 	}
 }	//	!namespace scene
-#endif // !_INCLUDE_SCENE_SCENE_H_
+#endif // !INCLUDE_SCENE_SCENE_H
 

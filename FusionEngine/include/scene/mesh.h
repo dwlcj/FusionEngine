@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_SCENE_MESH_H_
-#define _INCLUDE_SCENE_MESH_H_
+#ifndef INCLUDE_SCENE_MESH_H
+#define INCLUDE_SCENE_MESH_H
 
 //	Optix
 #include <optixu/optixpp_namespace.h>
@@ -121,5 +121,5 @@ namespace scene {
 	}
 
 }	//	!namespace scene
-#endif // !_INCLUDE_SCENE_MESH_H_
+#endif // !INCLUDE_SCENE_MESH_H
 

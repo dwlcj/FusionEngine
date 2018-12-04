@@ -18,6 +18,9 @@
     <ClInclude Include="..\include\ptx_compiler\ptx_compiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\ptx_compiler\ptx_compiler_flags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ptx_compiler\test_ptx_compiler.cpp">

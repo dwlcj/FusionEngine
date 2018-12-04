@@ -34,6 +34,7 @@
 #include <editor_ui/menu_bar.h>
 #include <editor_ui/file_menu.h>
 #include <editor_ui/edit_menu.h>
+#include <editor_ui/ptx_compiler_widget.h>
 /// STL
 #include <string>
 #include <memory>
@@ -138,6 +139,14 @@ int main(int argc, char* argv[]) {
 		std::make_shared<ui::EditMenu>();
 	menuBar->addItem(fileMenu);
 	menuBar->addItem(editMenu);
+	/// Widgets
+	std::shared_ptr<ui::widget::PTXCompilerWidget> ptxCompilerWidget =
+		std::make_shared<ui::widget::PTXCompilerWidget>();
+
+	/*****************
+	*	Subscriptions
+	******************/
+	ptxCompilerWidget->messageFlowOut().subscribe(ptxCompiler->messageFlowIn());
 
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar;
@@ -163,6 +172,8 @@ int main(int argc, char* argv[]) {
 		*********************/
 		//optixRenderer->render(0u);
 		menuBar->render();
+		/// Render Widgets
+		ptxCompilerWidget->render();
 		/**********************
 		*	End of Whatevah
 		**********************/

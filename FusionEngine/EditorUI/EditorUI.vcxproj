@@ -151,9 +151,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\editor_ui\edit_menu.h" />
+    <ClInclude Include="..\include\editor_ui\file_eplorer_popup.h" />
     <ClInclude Include="..\include\editor_ui\file_menu.h" />
     <ClInclude Include="..\include\editor_ui\menu_bar.h" />
     <ClInclude Include="..\include\editor_ui\menu_item.h" />
+    <ClInclude Include="..\include\editor_ui\pop_up.h" />
+    <ClInclude Include="..\include\editor_ui\ptx_compiler_widget.h" />
+    <ClInclude Include="..\include\editor_ui\widget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_OPTIX_MAPPING_SYSTEM_MAPPER_H_
-#define _INCLUDE_OPTIX_MAPPING_SYSTEM_MAPPER_H_
+#ifndef INCLUDE_OPTIX_MAPPING_SYSTEM_MAPPER_H
+#define INCLUDE_OPTIX_MAPPING_SYSTEM_MAPPER_H
 
 namespace map {
 
@@ -11,5 +11,5 @@ namespace map {
 		virtual const OutType map(const InTypes& ...inputsToMap) = 0;
 	};
 }
-#endif // !_INCLUDE_OPTIX_MAPPING_SYSTEM_MAPPER_H_
+#endif // !INCLUDE_OPTIX_MAPPING_SYSTEM_MAPPER_H
 
