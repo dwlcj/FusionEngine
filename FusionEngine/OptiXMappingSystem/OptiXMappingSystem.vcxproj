@@ -37,13 +37,13 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\props\OptiX_51.props" />
     <Import Project="..\props\cuda_92.props" />
+    <Import Project="..\props\OptiX5.1.1.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\props\OptiX_51.props" />
     <Import Project="..\props\cuda_92.props" />
+    <Import Project="..\props\OptiX5.1.1.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -93,6 +93,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\optix_mapping_system\test_optix_mapping_system.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\optix_mapping_system\CUDA\phong.cu" />
+    <None Include="..\src\optix_mapping_system\CUDA\triangle_mesh.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

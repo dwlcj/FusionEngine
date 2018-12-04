@@ -1,12 +1,12 @@
 #ifndef _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
 #define _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
 #define CERTH
-// CUDA
+#define DEBUG
+/// CUDA
 #include <nvrtc.h>
-
-//
+/// Logging
 #include <plog/Log.h>
-
+/// STL
 #include <string>
 #include <filesystem>
 #include <fstream>
@@ -324,10 +324,12 @@ namespace ptx {
 	*	Compiles ptx and saves ptx file
 	*/
 	void PTXCompiler::compileFile(const std::string& cuFilepath, const std::string& outputFilepath) {
+#ifdef DEBUG
 		const std::string ptxStr = compileStr(cuFilepath);
 		std::ofstream fileHandle(outputFilepath, std::ofstream::out);
 		fileHandle << ptxStr;
 		fileHandle.close();
+#endif // DEBUG
 	}
 }
 #endif // !_INCLUDE_PTX_COMPILER_PTX_COMPILER_H_

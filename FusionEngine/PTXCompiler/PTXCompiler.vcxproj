@@ -10,6 +10,12 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\ptx_compiler\ptx_compiler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\ptx_compiler\test_ptx_compiler.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FAD5B8C8-AA34-4671-822D-76C0666747BB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -83,12 +89,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="..\include\ptx_compiler\ptx_compiler.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\src\ptx_compiler\test_ptx_compiler.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

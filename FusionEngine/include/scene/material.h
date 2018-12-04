@@ -21,13 +21,13 @@ namespace scene {
 			const optix::float3& spec, 
 			const optix::float3& rad, 
 			const optix::float3& amb, 
-			const optix::float1& shin);
+			const float& shin);
 		const std::string name() const { return mName; }
 		const optix::float3 diffusion() const { return mDiffuse; }
 		const optix::float3 specular() const { return mSpecular; }
 		const optix::float3 radiance() const { return mRadiance; }
 		const optix::float3 ambient() const { return mAmbient; }
-		const optix::float1 shininess() const { return mShininess; }
+		const float shininess() const { return mShininess; }
 		const Material generateDefault();
 	private:
 		std::string mName;
@@ -35,7 +35,7 @@ namespace scene {
 		optix::float3 mSpecular;
 		optix::float3 mRadiance;
 		optix::float3 mAmbient;
-		optix::float1 mShininess;
+		float mShininess;
 	};
 
 	// constructor
@@ -44,7 +44,7 @@ namespace scene {
 		const optix::float3& spec,
 		const optix::float3& rad,
 		const optix::float3& amb,
-		const optix::float1& shin)
+		const float& shin)
 		: mDiffuse(diff), 
 		mSpecular(spec), 
 		mRadiance(rad), 
@@ -56,7 +56,7 @@ namespace scene {
 	*/
 	const Material Material::generateDefault() {
 		optix::float3 def = optix::make_float3(0.5f, 0.5f, 0.5f);
-		return Material(std::string("default"), def, def, def, def, optix::make_float1(0.0f));
+		return Material(std::string("default"), def, def, def, def, 0.0f);
 	}
 }	//	!namespace scene
 #endif // !_INCLUDE_SCENE_MATERIAL_H_

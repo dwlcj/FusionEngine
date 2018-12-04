@@ -1,12 +1,11 @@
 #ifndef _INCLUDE_SCENE_MESH_H_
 #define _INCLUDE_SCENE_MESH_H_
 
+//	Optix
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
-#include <optixu/optixu_math_namespace.h>
-#include <optixu/optixu_matrix_namespace.h>
 
-//
+//	STL
 #include <vector>
 #include <string>
 
@@ -26,11 +25,11 @@ namespace scene {
 		const optix::Aabb bbox() const { return mBbox; }
 		const bool hasNormals();
 		const bool hasTexCoords();
-		const std::size_t vertexCount() { return mVertexPositions.size(); }
-		const std::size_t faceCount() { return mFaceIndices.size(); }
-		const std::size_t normalsCount() { return mNormals.size(); }
-		const std::size_t texCoordsCount() { return mTexCoords.size(); }
-		const std::size_t materialsCount() { return mMaterialIndices.size(); }
+		const std::size_t vertexCount() const { return mVertexPositions.size(); }
+		const std::size_t faceCount() const { return mFaceIndices.size(); }
+		const std::size_t normalsCount() const { return mNormals.size(); }
+		const std::size_t texCoordsCount() const { return mTexCoords.size(); }
+		const std::size_t materialsCount() const { return mMaterialIndices.size(); }
 		void insertVertex(const optix::float3& vertex);
 		void insertFaceIndices(const optix::uint3& faceIndices);
 		void insertNormal(const optix::float3& normal);

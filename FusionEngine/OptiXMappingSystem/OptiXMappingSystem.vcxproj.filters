@@ -32,8 +32,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\optix_mapping_system\geometry_mapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\src\optix_mapping_system\test_optix_mapping_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\optix_mapping_system\CUDA\triangle_mesh.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\optix_mapping_system\CUDA\phong.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
   </ItemGroup>
 </Project>
