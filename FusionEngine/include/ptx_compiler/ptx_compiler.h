@@ -2,12 +2,11 @@
 #define _INCLUDE_PTX_COMPILER_PTX_COMPILER_H_
 #define CERTH
 #define DEBUG
-// CUDA
+/// CUDA
 #include <nvrtc.h>
-
-//
+/// Logging
 #include <plog/Log.h>
-
+/// STL
 #include <string>
 #include <filesystem>
 #include <fstream>
