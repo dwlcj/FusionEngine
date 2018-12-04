@@ -1,12 +1,11 @@
 #ifndef _INCLUDE_SCENE_MESH_H_
 #define _INCLUDE_SCENE_MESH_H_
 
+//	Optix
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
-#include <optixu/optixu_math_namespace.h>
-#include <optixu/optixu_matrix_namespace.h>
 
-//
+//	STL
 #include <vector>
 #include <string>
 
