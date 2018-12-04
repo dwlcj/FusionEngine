@@ -1,13 +1,12 @@
 #ifndef _INCLUDE_FILESYSTEM_FILESYSTEM_H_
 #define _INCLUDE_FILESYSTEM_FILESYSTEM_H_
-
+/// Fusion
 #include <filesystem/scene_loader.h>
 #include <filesystem/scene_loader_adapter.h>
-
+/// STL
 #include <memory>
 
 namespace fs {
-
 
 	// Filesystem class
 	class Filesystem {

@@ -30,6 +30,10 @@
 #include <ptx_compiler/ptx_compiler.h>
 /// Renderer
 #include <optix_rendering_system/optix_rendering_system.h>
+/// UI
+#include <editor_ui/menu_bar.h>
+#include <editor_ui/file_menu.h>
+#include <editor_ui/edit_menu.h>
 /// STL
 #include <string>
 #include <memory>
@@ -125,10 +129,21 @@ int main(int argc, char* argv[]) {
 	/// OptiX renderer
 	std::shared_ptr<rt::OptiXRenderer> optixRenderer =
 		std::make_shared<rt::OptiXRenderer>(ctx, AppWidth, AppHeight);
+	/// UI Related
+	std::shared_ptr<ui::MenuBar> menuBar =
+		std::make_shared<ui::MenuBar>();
+	std::shared_ptr<ui::FileMenu> fileMenu =
+		std::make_shared<ui::FileMenu>();
+	std::shared_ptr<ui::EditMenu> editMenu =
+		std::make_shared<ui::EditMenu>();
+	menuBar->addItem(fileMenu);
+	menuBar->addItem(editMenu);
 
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize;
+	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_MenuBar;
+	
 
 	/**************
 	*	Game Loop
@@ -147,6 +162,7 @@ int main(int argc, char* argv[]) {
 		*	Do whatevah here
 		*********************/
 		//optixRenderer->render(0u);
+		menuBar->render();
 		/**********************
 		*	End of Whatevah
 		**********************/

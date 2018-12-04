@@ -103,6 +103,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)include/ext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,6 +147,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\editor_ui\test_ui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\editor_ui\edit_menu.h" />
+    <ClInclude Include="..\include\editor_ui\file_menu.h" />
+    <ClInclude Include="..\include\editor_ui\menu_bar.h" />
+    <ClInclude Include="..\include\editor_ui\menu_item.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
