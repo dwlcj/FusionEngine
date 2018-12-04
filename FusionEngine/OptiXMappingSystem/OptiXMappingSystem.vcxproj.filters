@@ -21,8 +21,19 @@
     <ClInclude Include="..\include\optix_mapping_system\geometry_mapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\optix_mapping_system\CUDA\object.h">
-      <Filter>Source Files\CUDA</Filter>
+    <ClInclude Include="..\include\optix_mapping_system\mapper.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optix_mapping_system\geometry_instance_mapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optix_mapping_system\scene_mapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\optix_mapping_system\test_optix_mapping_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
