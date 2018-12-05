@@ -18,6 +18,12 @@
     <ClInclude Include="..\include\comm_system\optix_renderer_message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\comm_system\float3_program_message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\comm_system\camera_message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\comm_system\test_comm.cpp">

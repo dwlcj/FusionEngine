@@ -71,9 +71,9 @@ namespace map {
 		// TODO: change these hardcoded abs paths and make relative
 		// or maybe move the ptx files to the resources folder??
 		// I dunno
-		mBoundingBoxProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\triangle_mesh.ptx";
+		mBoundingBoxProgPath = "res\\ptx\\triangle_mesh.ptx";
 		mBoundingBoxProgName = "mesh_bounds";
-		mIntersectionProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\triangle_mesh.ptx";
+		mIntersectionProgPath = "res\\ptx\\triangle_mesh.ptx";
 		mIntersectionProgName = "mesh_intersect";
 	}
 

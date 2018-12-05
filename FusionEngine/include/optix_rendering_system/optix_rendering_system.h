@@ -11,10 +11,15 @@
 #include <mmsystem.h>
 /// Logging
 #include <plog/Log.h>
+///Fusion
+#include <optix_rendering_system/pinhole_cam_program.h>
+#include <optix_rendering_system/miss_program.h>
+#include <optix_rendering_system/exception_program.h>
 /// STL
 #include <vector>
 #include <string>
 #include <functional>
+
 namespace rt {
 	// Renders scene
 	class OptiXRenderer {
@@ -29,29 +34,17 @@ namespace rt {
 		void createPboBuffer();
 		void createRayGenerationPrograms();
 	private:
-		optix::Context& mContext;
-		std::string mNoneRayGenProgPath;
-		std::string mPinholeRayGenProgPath;
-		std::string mPanoRayGenProgPath;
-		std::string mExceptionProgPath;
-		std::string mMissProgPath;
-		std::string mExceptionProgName;
-		std::string mMissProgName;
-		std::string mNoneRayGenProgName;
-		std::string mPinholeRayGenProgName;
-		std::string mPanoRayGenProgName;
-		optix::Program mNoneRayGenProgram;
-		optix::Program mPinholeRayGenProgram;
-		optix::Program mPanoRayGenProgram;
-		optix::Program mExceptionProgram;
-		optix::Program mMissProgram;
 		std::size_t mLaunchWidth;
 		std::size_t mLaunchHeight;
 		optix::Buffer mOutBuffer;
 		GLuint mPBO;
 		GLuint mTex;
 		unsigned int mLaunchIndex;
-		optix::Group mDummyGroup;
+		optix::Context& mContext;
+		std::shared_ptr<PinholeCamProgram> mPinholeProgram;
+		std::shared_ptr<MissProgram> mMissProgram;
+		std::shared_ptr<ExceptionProgram> mExceptionProgram;
+		bool mTopExists;
 	};
 
 	/** Constructor
@@ -63,20 +56,39 @@ namespace rt {
 		const unsigned int& launchIndex) 
 		: mContext(ctx), mLaunchWidth(width), mLaunchHeight(height), mLaunchIndex(launchIndex)
 	{ 
-		mNoneRayGenProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\draw_color.ptx";
-		mNoneRayGenProgName = "draw_solid_color";
-		mExceptionProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\exception.ptx";
+		// Create Programs
+		mPinholeProgram =
+			std::make_shared<PinholeCamProgram>(mContext,
+				std::string("pinhole_camera"),
+				std::string("res\\ptx\\pinhole_camera.ptx"),
+				std::string(""),
+				optix::make_float3(0.0f, 0.0f, 0.0f),
+				optix::make_float3(0.0f, 0.0f, 1.0f),
+				optix::make_float3(0.0, 1.0f, 0.0f));
+		mExceptionProgram =
+			std::make_shared<ExceptionProgram>(mContext,
+				std::string("exception"),
+				std::string("res\\ptx\\exception.ptx"),
+				std::string(""),
+				optix::make_float3(1.0f, 0.0f, 0.0f));
+		mMissProgram =
+			std::make_shared<MissProgram>(mContext,
+				std::string("miss"),
+				std::string("res\\ptx\\miss.ptx"),
+				std::string(""),
+				optix::make_float3(0.2f, 1.0f, 0.5f));
 		createPboBuffer();
-		mContext->setRayTypeCount(2);
-		mContext->setEntryPointCount(1);
-		createRayGenerationPrograms();
-		optix::float3 drawColor = optix::make_float3(0.8f, 0.0f, 0.8f);
-		mNoneRayGenProgram["draw_color"]->setFloat(optix::make_float3(0.8f, 0.0f, 0.8f));
-		mContext->setRayGenerationProgram(0u, mNoneRayGenProgram);
+
+		// context related
+		// TODO: add all entry points
+		mContext->setEntryPointCount(1u);
+		mContext->setRayGenerationProgram(0u, mMissProgram->program());
+		
 	}
 
 	 void OptiXRenderer::createRayGenerationPrograms() {
-		 mNoneRayGenProgram = mContext->createProgramFromPTXFile(mNoneRayGenProgPath, mNoneRayGenProgName);
+		 
+		 
 		 //mPinholeRayGenProgram = mContext->createProgramFromPTXFile(mPinholeRayGenProgPath, mPinholeRayGenProgName);
 		 //mPanoRayGenProgram = mContext->createProgramFromPTXFile(mPanoRayGenProgPath, mPanoRayGenProgName);
 		 //mExceptionProgram = mContext->createProgramFromPTXFile(mExceptionProgPath, mExceptionProgName);

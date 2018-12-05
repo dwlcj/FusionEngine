@@ -56,9 +56,9 @@ namespace map {
 	GinstanceMapper::GinstanceMapper(optix::Context& ctx)
 		: mContext(ctx)
 	{ 
-		mClosestHitProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\phong.ptx";
+		mClosestHitProgPath = "res\\ptx\\phong.ptx";
 		mClosestHitProgName = "closest_hit_radiance";
-		mAnyHitProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\phong.ptx";
+		mAnyHitProgPath = "res\\ptx\\phong.ptx";
 		mAnyHitProgName = "any_hit_shadow";
 	}
 

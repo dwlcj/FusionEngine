@@ -43,8 +43,8 @@
 /**
 *	Globals
 */
-static std::size_t AppWidth = 1440;
-static std::size_t AppHeight = 720;
+static std::size_t AppWidth = 1920;
+static std::size_t AppHeight = 1080;
 static const ImVec4 clearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 // GLFW error callback

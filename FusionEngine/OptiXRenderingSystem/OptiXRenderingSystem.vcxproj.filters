@@ -18,6 +18,18 @@
     <ClInclude Include="..\include\optix_rendering_system\optix_rendering_system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optix_rendering_system\rt_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optix_rendering_system\miss_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optix_rendering_system\exception_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optix_rendering_system\pinhole_cam_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\optix_rendering_system\test_optix_renderer.cpp">

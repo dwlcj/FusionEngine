@@ -40,6 +40,7 @@
     <Import Project="..\props\OptiX5.1.1.props" />
     <Import Project="..\props\glfw_x64_vc14_debug.props" />
     <Import Project="..\props\glew_x64_vc14_debug.props" />
+    <Import Project="..\props\cuda_92.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -88,7 +89,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\optix_rendering_system\miss_program.h" />
+    <ClInclude Include="..\include\optix_rendering_system\exception_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\optix_rendering_system.h" />
+    <ClInclude Include="..\include\optix_rendering_system\pinhole_cam_program.h" />
+    <ClInclude Include="..\include\optix_rendering_system\rt_program.h" />
+    <ClInclude Include="solid_color_program.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\optix_rendering_system\test_optix_renderer.cpp" />

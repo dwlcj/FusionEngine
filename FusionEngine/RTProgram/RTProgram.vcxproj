@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{72FF344E-C81A-4C59-810D-AF7DCFAF8530}</ProjectGuid>
+    <ProjectGuid>{26FD3ECE-64C7-4E61-8A79-11C20CB85677}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -48,14 +48,11 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\comm_system\camera_message.h" />
-    <ClInclude Include="..\include\comm_system\filesystem_message.h" />
-    <ClInclude Include="..\include\comm_system\float3_program_message.h" />
-    <ClInclude Include="..\include\comm_system\optix_renderer_message.h" />
-    <ClInclude Include="..\include\comm_system\ptx_compiler_message.h" />
+    <ClInclude Include="..\include\rt_program\none_cam_prog_type.h" />
+    <ClInclude Include="..\include\rt_program\rt_program.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\comm_system\test_comm.cpp" />
+    <ClCompile Include="..\src\rt_program\test_rt_program.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
