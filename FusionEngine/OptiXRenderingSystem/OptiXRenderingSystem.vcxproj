@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\optix_rendering_system\float3_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\miss_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\exception_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\optix_rendering_system.h" />

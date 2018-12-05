@@ -87,8 +87,6 @@ namespace rt {
 	}
 
 	 void OptiXRenderer::createRayGenerationPrograms() {
-		 
-		 
 		 //mPinholeRayGenProgram = mContext->createProgramFromPTXFile(mPinholeRayGenProgPath, mPinholeRayGenProgName);
 		 //mPanoRayGenProgram = mContext->createProgramFromPTXFile(mPanoRayGenProgPath, mPanoRayGenProgName);
 		 //mExceptionProgram = mContext->createProgramFromPTXFile(mExceptionProgPath, mExceptionProgName);
