@@ -1,25 +1,20 @@
 #ifndef INCLUDE_OPTIX_RENDERING_SYSTEM_OPTIX_RENDERING_SYSTEM_H
 #define INCLUDE_OPTIX_RENDERING_SYSTEM_OPTIX_RENDERING_SYSTEM_H
-
-// OptiX
+/// OptiX
+#include <optixu/optixu_matrix_namespace.h>
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_math_namespace.h>
-
-// GL
-
+/// GL
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <windows.h>
 #include <mmsystem.h>
-
-// logging
+/// Logging
 #include <plog/Log.h>
-
-// stl
+/// STL
 #include <vector>
 #include <string>
 #include <functional>
-
 namespace rt {
 	// Renders scene
 	class OptiXRenderer {
@@ -29,16 +24,34 @@ namespace rt {
 			const std::size_t& width, 
 			const std::size_t& height, 
 			const unsigned int& launchIndex = 0u);
-		void render(const unsigned int& launchIndex);
+		void render();
 	protected:
 		void createPboBuffer();
+		void createRayGenerationPrograms();
 	private:
 		optix::Context& mContext;
+		std::string mNoneRayGenProgPath;
+		std::string mPinholeRayGenProgPath;
+		std::string mPanoRayGenProgPath;
+		std::string mExceptionProgPath;
+		std::string mMissProgPath;
+		std::string mExceptionProgName;
+		std::string mMissProgName;
+		std::string mNoneRayGenProgName;
+		std::string mPinholeRayGenProgName;
+		std::string mPanoRayGenProgName;
+		optix::Program mNoneRayGenProgram;
+		optix::Program mPinholeRayGenProgram;
+		optix::Program mPanoRayGenProgram;
+		optix::Program mExceptionProgram;
+		optix::Program mMissProgram;
 		std::size_t mLaunchWidth;
 		std::size_t mLaunchHeight;
 		optix::Buffer mOutBuffer;
 		GLuint mPBO;
 		GLuint mTex;
+		unsigned int mLaunchIndex;
+		optix::Group mDummyGroup;
 	};
 
 	/** Constructor
@@ -48,9 +61,26 @@ namespace rt {
 		const std::size_t& width, 
 		const std::size_t& height, 
 		const unsigned int& launchIndex) 
-		: mContext(ctx), mLaunchWidth(width), mLaunchHeight(height)
+		: mContext(ctx), mLaunchWidth(width), mLaunchHeight(height), mLaunchIndex(launchIndex)
 	{ 
+		mNoneRayGenProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\draw_color.ptx";
+		mNoneRayGenProgName = "draw_solid_color";
+		mExceptionProgPath = "D:\\_dev\\_Projects\\_Visual_Studio\\FusionEngine\\FusionEngine\\src\\optix_mapping_system\\CUDA\\exception.ptx";
 		createPboBuffer();
+		mContext->setRayTypeCount(2);
+		mContext->setEntryPointCount(1);
+		createRayGenerationPrograms();
+		optix::float3 drawColor = optix::make_float3(0.8f, 0.0f, 0.8f);
+		mNoneRayGenProgram["draw_color"]->setFloat(optix::make_float3(0.8f, 0.0f, 0.8f));
+		mContext->setRayGenerationProgram(0u, mNoneRayGenProgram);
+	}
+
+	 void OptiXRenderer::createRayGenerationPrograms() {
+		 mNoneRayGenProgram = mContext->createProgramFromPTXFile(mNoneRayGenProgPath, mNoneRayGenProgName);
+		 //mPinholeRayGenProgram = mContext->createProgramFromPTXFile(mPinholeRayGenProgPath, mPinholeRayGenProgName);
+		 //mPanoRayGenProgram = mContext->createProgramFromPTXFile(mPanoRayGenProgPath, mPanoRayGenProgName);
+		 //mExceptionProgram = mContext->createProgramFromPTXFile(mExceptionProgPath, mExceptionProgName);
+		 //mMissProgram = mContext->createProgramFromPTXFile(mMissProgPath, mMissProgName);
 	}
 
 	/** Creates output buffer (GL interop)
@@ -86,8 +116,9 @@ namespace rt {
 	/** To be called in the game loop
 	*	Renders the scene
 	*/
-	void OptiXRenderer::render(const unsigned int& launchIndex) {
-		mContext->launch(launchIndex, mLaunchWidth, mLaunchHeight);
+	void OptiXRenderer::render() {
+		mContext->launch(mLaunchIndex, mLaunchWidth, mLaunchHeight);
+		
 		// Query buffer info
 		RTsize bufferWRts, bufferHRts;
 		mOutBuffer->getSize(bufferWRts, bufferHRts);

@@ -2,8 +2,10 @@
 #define INCLUDE_EDITOR_UI_POP_IP_H
 namespace ui {
 	namespace pop {
+		template <typename... Args>
 		class PopUp {
-			virtual void pop() = 0;
+			virtual void activate() = 0;
+			virtual void pop(const bool& pop, const Args& ...args) = 0;
 		};
 	}	//	!namespace pop
 }	//	!namespace ui

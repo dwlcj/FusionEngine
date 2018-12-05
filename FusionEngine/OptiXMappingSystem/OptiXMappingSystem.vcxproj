@@ -89,6 +89,7 @@
     <ClInclude Include="..\include\optix_mapping_system\geometry_instance_mapper.h" />
     <ClInclude Include="..\include\optix_mapping_system\geometry_mapper.h" />
     <ClInclude Include="..\include\optix_mapping_system\mapper.h" />
+    <ClInclude Include="..\include\optix_mapping_system\ray_generation_mapper.h" />
     <ClInclude Include="..\include\optix_mapping_system\scene_mapper.h" />
   </ItemGroup>
   <ItemGroup>

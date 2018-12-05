@@ -30,6 +30,9 @@
     <ClInclude Include="..\include\optix_mapping_system\scene_mapper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optix_mapping_system\ray_generation_mapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\optix_mapping_system\geometry_mapper.h">

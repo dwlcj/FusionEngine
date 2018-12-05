@@ -35,6 +35,7 @@
 #include <editor_ui/file_menu.h>
 #include <editor_ui/edit_menu.h>
 #include <editor_ui/ptx_compiler_widget.h>
+#include <editor_ui/viewport_widget.h>
 /// STL
 #include <string>
 #include <memory>
@@ -142,11 +143,18 @@ int main(int argc, char* argv[]) {
 	/// Widgets
 	std::shared_ptr<ui::widget::PTXCompilerWidget> ptxCompilerWidget =
 		std::make_shared<ui::widget::PTXCompilerWidget>();
+	std::shared_ptr<ui::widget::ViewportWidget> viewportWidget =
+		std::make_shared<ui::widget::ViewportWidget>();
 
 	/*****************
 	*	Subscriptions
 	******************/
+	/// PTX Compiler Widget -> PTX Compiler
 	ptxCompilerWidget->messageFlowOut().subscribe(ptxCompiler->messageFlowIn());
+	/// File Menu -> Filesystem
+	fileMenu->messageFlowOut().subscribe(filesystem->messageFlowIn());
+	/// Filesystem /-> scene Mapper
+	filesystem->sceneFlowOut().subscribe(sceneMapper->sceneFlowIn());
 
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar;
@@ -170,10 +178,17 @@ int main(int argc, char* argv[]) {
 		/********************
 		*	Do whatevah here
 		*********************/
-		//optixRenderer->render(0u);
+		try {
+			ctx->validate();
+			optixRenderer->render();
+		}
+		catch (optix::Exception& ex) {
+			LOG_ERROR << ex.getErrorCode() << ": " << ex.getErrorString();
+		}
 		menuBar->render();
 		/// Render Widgets
 		ptxCompilerWidget->render();
+		viewportWidget->render();
 		/**********************
 		*	End of Whatevah
 		**********************/

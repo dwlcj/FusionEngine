@@ -38,18 +38,18 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\props\assimp_x64_vc14_debug.props" />
-    <Import Project="..\props\cuda_92.props" />
     <Import Project="..\props\glew_x64_vc14_debug.props" />
     <Import Project="..\props\glfw_x64_vc14_debug.props" />
     <Import Project="..\props\OptiX5.1.1.props" />
+    <Import Project="..\props\cuda_92.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\props\assimp_x64_vc14_release.props" />
-    <Import Project="..\props\cuda_92.props" />
     <Import Project="..\props\glew_x64_vc14_release.props" />
     <Import Project="..\props\glfw_x64_vc14_release.props" />
     <Import Project="..\props\OptiX5.1.1.props" />
+    <Import Project="..\props\cuda_92.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

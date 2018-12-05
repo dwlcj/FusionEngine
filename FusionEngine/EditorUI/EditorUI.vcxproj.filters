@@ -41,7 +41,10 @@
     <ClInclude Include="..\include\editor_ui\pop_up.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\editor_ui\file_eplorer_popup.h">
+    <ClInclude Include="..\include\editor_ui\file_explorer_popup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\editor_ui\viewport_widget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

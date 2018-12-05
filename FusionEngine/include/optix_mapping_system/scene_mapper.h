@@ -1,15 +1,14 @@
 #ifndef INCLUDE_OPTIX_MAPPING_SYSTEM_SCENE_MAPPER_H
 #define INCLUDE_OPTIX_MAPPING_SYSTEM_SCENE_MAPPER_H
-
+/// Logging
 #include <plog/Log.h>
-
+/// Fusion
 #include <optix_mapping_system/geometry_mapper.h>
 #include <optix_mapping_system/geometry_instance_mapper.h>
-
 #include <scene/scene.h>
-
+/// STL
 #include <memory>
-
+#include <functional>
 namespace map {
 	/** 
 	*	Maps Fusion's scene to OptiX Traversal Graph
@@ -18,6 +17,7 @@ namespace map {
 	public:
 		explicit SceneMapper(optix::Context& ctx);
 		void map(const scene::Scene& s);
+		std::function<void(const scene::Scene&)> sceneFlowIn();
 	protected:
 		void compressScene(const scene::Scene& s);
 	private:
@@ -94,6 +94,15 @@ namespace map {
 			transform->setChild(ggroup);
 			mGroupNode->addChild(transform);
 		}
+	}
+
+	/**
+	*
+	*/
+	std::function<void(const scene::Scene&)> SceneMapper::sceneFlowIn() {
+		return [this](const scene::Scene& s) {
+			map(s);
+		};
 	}
 }
 #endif // !INCLUDE_OPTIX_MAPPING_SYSTEM_SCENE_MAPPER_H

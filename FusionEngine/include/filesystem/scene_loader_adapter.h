@@ -3,8 +3,8 @@
 
 #include <rxcpp/rx.hpp>
 //
-#include <filesystem\scene_loader.h>
-#include <filesystem\assimp_loader.h>
+#include <filesystem/scene_loader.h>
+#include <filesystem/assimp_loader.h>
 //
 #include <string>
 
@@ -15,23 +15,23 @@ namespace fs {
 	public:
 		SceneLoaderAdapter() { }
 		void loadFile(const std::string& filepath) override;
-		rxcpp::observable<scene::Scene> fusionSceneOut();
+		rxcpp::observable<scene::Scene> sceneFlowOut() override;
 	private:
-		rxcpp::subjects::subject<scene::Scene> mSceneOut;
+		rxcpp::subjects::subject<scene::Scene> mSceneFlowOut;
 	};
 
 	/*! Imports 3D file using Assimp
 	*/
 	void SceneLoaderAdapter::loadFile(const std::string& filepath) {
 		const aiScene* scene = AssimpLoader::loadFile(filepath);
-		const scene::Scene fusionScene = AssimpLoader::importScene(scene);
-		mSceneOut.get_subscriber().on_next(fusionScene);
+		scene::Scene fusionScene = AssimpLoader::importScene(scene);
+		mSceneFlowOut.get_subscriber().on_next(fusionScene);
 	}
 
 	/*!	Returns fusionScene as observable for subscription
 	*/
-	rxcpp::observable<scene::Scene> SceneLoaderAdapter::fusionSceneOut() {
-		return mSceneOut.get_observable().as_dynamic();
+	rxcpp::observable<scene::Scene> SceneLoaderAdapter::sceneFlowOut() {
+		return mSceneFlowOut.get_observable().as_dynamic();
 	}
 
 

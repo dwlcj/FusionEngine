@@ -41,7 +41,6 @@ rtDeclareVariable(PerRayData_radiance, prd_radiance, rtPayload, );
 
 RT_PROGRAM void miss()
 {
-  //rtPrintf("Miss. bg_color: {%f, %f, %f}\n", bg_color.x, bg_color.y, bg_color.z);
   prd_radiance.result = bg_color;
 }
 
