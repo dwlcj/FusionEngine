@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\scene\basic_light.h" />
     <ClInclude Include="..\include\scene\material.h" />
     <ClInclude Include="..\include\scene\mesh.h" />
     <ClInclude Include="..\include\scene\scene.h" />

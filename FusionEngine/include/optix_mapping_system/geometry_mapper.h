@@ -1,14 +1,14 @@
 #ifndef INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_MAPPER_H
 #define INCLUDE_OPTIX_MAPPING_SYSTEM_GEOMETRY_MAPPER_H
-
-// OptiX
+/// OptiX
 #include <optixu/optixpp_namespace.h>
 #include <optixu/optixu_math_namespace.h>
 #include <optixu/optixu_aabb_namespace.h>
-
-// scene
+/// Fusion
 #include <optix_mapping_system/mapper.h>
 #include <scene/mesh.h>
+#include <optix_rendering_system/bounding_box_program.h>
+#include <optix_rendering_system/intersection_program.h>
 
 namespace map {
 	
@@ -206,13 +206,14 @@ namespace map {
 	*/
 	const optix::Geometry GeometryMapper::map(const scene::Mesh& mesh) {
 		optix::Geometry geom = mContext->createGeometry();
+		geom->setPrimitiveCount(mesh.faceCount());
 		GeometryBuffers buffers = setupBuffers(mesh);
 		mapBuffers(mesh, buffers);
 		GeometryPrograms programs = generatePrograms();
-		addBuffersToPrograms(buffers, programs);
-		// assign programs
 		geom->setBoundingBoxProgram(programs.boundingBoxProgram);
 		geom->setIntersectionProgram(programs.intersectionProgram);
+		addBuffersToPrograms(buffers, programs);
+		unmapBuffers(buffers);
 		return geom;
 	}
 }	//	!namespace map

@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EditorUI", "EditorUI\Editor
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommSystem", "CommSystem\CommSystem.vcxproj", "{72FF344E-C81A-4C59-810D-AF7DCFAF8530}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OptiXSceneGraph", "OptiXSceneGraph\OptiXSceneGraph.vcxproj", "{226B910E-65AC-4593-A563-A1C0448C13CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -77,6 +79,14 @@ Global
 		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Release|x64.ActiveCfg = Release|x64
 		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Release|x64.Build.0 = Release|x64
 		{72FF344E-C81A-4C59-810D-AF7DCFAF8530}.Release|x86.ActiveCfg = Release|x64
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Debug|x64.ActiveCfg = Debug|x64
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Debug|x64.Build.0 = Debug|x64
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Debug|x86.ActiveCfg = Debug|Win32
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Debug|x86.Build.0 = Debug|Win32
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Release|x64.ActiveCfg = Release|x64
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Release|x64.Build.0 = Release|x64
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Release|x86.ActiveCfg = Release|Win32
+		{226B910E-65AC-4593-A563-A1C0448C13CE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

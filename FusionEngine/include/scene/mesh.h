@@ -36,6 +36,7 @@ namespace scene {
 		void insertTexCoord(const optix::float2& texCoord);
 		void insertMaterialIndex(const optix::uint& matIndex);
 		void setBbox(const optix::float3& min, const optix::float3& max);
+		void calcBbox();
 		void center();
 	private:
 		std::size_t mId;
@@ -114,10 +115,38 @@ namespace scene {
 		mMaterialIndices.emplace_back(matIndex);
 	}
 
-	/*! Calculates bounding box
+	/*! sets bounding box
 	*/
 	void Mesh::setBbox(const optix::float3& min, const optix::float3& max) {
 		mBbox = optix::Aabb(min, max);
+	}
+
+	/**
+	*	Calculates mesh's bounding box
+	*/
+	void Mesh::calcBbox() {
+		for (std::vector<optix::float3>::const_iterator it = mVertexPositions.begin();
+			it != mVertexPositions.end(); ++it) {
+			mBbox.m_min.x = std::fminf(mBbox.m_min.x, it->x);
+			mBbox.m_min.y = std::fminf(mBbox.m_min.y, it->y);
+			mBbox.m_min.z = std::fminf(mBbox.m_min.z, it->z);
+			mBbox.m_max.x = std::fmaxf(mBbox.m_max.x, it->x);
+			mBbox.m_max.y = std::fmaxf(mBbox.m_max.y, it->y);
+			mBbox.m_max.z = std::fmaxf(mBbox.m_max.z, it->z);
+		}
+	}
+
+	/**
+	*	Centers mesh's bbox
+	*/
+	void Mesh::center() {
+		for (std::vector<optix::float3>::iterator it = mVertexPositions.begin();
+			it != mVertexPositions.end(); ++it) {
+			it->x -= mBbox.center().x;
+			it->y -= mBbox.center().y;
+			it->z -= mBbox.center().z;
+		}
+		calcBbox();
 	}
 
 }	//	!namespace scene

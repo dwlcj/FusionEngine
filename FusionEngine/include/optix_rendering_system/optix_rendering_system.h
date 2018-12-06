@@ -36,6 +36,7 @@ namespace rt {
 		void render();
 		std::function<void(const comm::OptiXRendererMessage&)> messageFlowIn();
 		std::function<void(const comm::CameraMessage&)> pinholeCameraMessageFlowIn();
+		std::function<void(const optix::Group&)> topObjectFlowIn();
 	protected:
 		void createPboBuffer();
 	private:
@@ -51,7 +52,9 @@ namespace rt {
 		std::shared_ptr<SimpleMissProgram> mSimpleMissProgram;
 		std::shared_ptr<ExceptionProgram> mExceptionProgram;
 		std::shared_ptr<PinholeCameraProgram> mPinholeCameraProgram;
+		// Pano Program
 		bool mTopExists;
+		bool mLightsExist;
 	};
 
 	/** Constructor
@@ -66,6 +69,7 @@ namespace rt {
 		mLaunchHeight(height)
 	{
 		mTopExists = false;
+		mLightsExist = false;
 		createPboBuffer();
 		// Create Programs
 		/// Solid Color Program
@@ -224,6 +228,25 @@ namespace rt {
 		return mPinholeCameraProgram->messageFlowIn();
 	}
 
+	/**
+	*
+	*/
+	std::function<void(const optix::Group&)> OptiXRenderer::topObjectFlowIn() {
+		return [this](const optix::Group& topObj) {
+			// TODO: A lot to do here
+			// Must find a way of beautifull communication
+			// between programs
+			// Maybe I should attach geometry related variables to geometry instance
+			// groups to context
+			if (!mTopExists) {
+				mContext["top_object"]->set(topObj);
+				mContext["top_shadower"]->set(topObj);
+				mPinholeCameraProgram->setTopObject(topObj);
+				mContext->setEntryPointCount(2u);
+				mContext->setRayGenerationProgram(1u, mPinholeCameraProgram->program());
+			}
+		};
+	}
 
 }	//	!namespace rt
 #endif // !INCLUDE_OPTIX_RENDERING_SYSTEM_OPTIX_RENDERING_SYSTEM_H

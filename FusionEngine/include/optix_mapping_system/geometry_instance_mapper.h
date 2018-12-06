@@ -178,10 +178,11 @@ namespace map {
 			GinstancePrograms programs = generatePrograms();
 			addVarsToPrograms(programs, mat[m]);
 			material->setClosestHitProgram(0u, programs.closestHitProg);
-			material->setAnyHitProgram(1u, programs.anyHitProg);
+			material->setAnyHitProgram(0u, programs.anyHitProg);
 			materials.emplace_back(material);
 		}
 		optix::GeometryInstance ginstance = mContext->createGeometryInstance(geom, materials.begin(), materials.end());
+		ginstance->setMaterialCount(mat.size());
 		return ginstance;
 	}
 }	//	!namespace map

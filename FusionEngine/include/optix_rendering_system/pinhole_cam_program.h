@@ -31,11 +31,13 @@ namespace rt {
 		void setLookat(const optix::float3& lookat);
 		void setUp(const optix::float3& up);
 		void setTopExists(const bool& exists);
+		void setTopObject(const optix::Group& topObj);
 		std::function<void(const comm::CameraMessage&)> messageFlowIn();
 	protected:
 		void calculateCamParams();
 		void updateParams();
 	private:
+		optix::Group mTopObject;
 		optix::float3 mEye;
 		optix::float3 mLookat;
 		optix::float3 mUp;
@@ -102,6 +104,16 @@ namespace rt {
 	void PinholeCameraProgram::setTopExists(const bool& exists) {
 		mTopExists = exists;
 		this->program()["topExists"]->setInt(exists);
+	}
+
+	/**
+	*	Sets program's top object variable
+	*/
+	void PinholeCameraProgram::setTopObject(const optix::Group& topObj) {
+		if (!mTopExists) {
+			mTopObject = topObj;
+			this->program()["top_object"]->set(mTopObject);
+		}
 	}
 
 	/**

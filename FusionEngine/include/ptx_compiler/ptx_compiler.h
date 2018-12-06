@@ -1,6 +1,6 @@
 #ifndef INCLUDE_PTX_COMPILER_PTX_COMPILER_H
 #define INCLUDE_PTX_COMPILER_PTX_COMPILER_H
-#define CERTH
+//#define CERTH
 #define DEBUG
 /// CUDA
 #include <nvrtc.h>
