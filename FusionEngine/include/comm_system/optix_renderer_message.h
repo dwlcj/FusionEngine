@@ -1,29 +1,20 @@
 #ifndef INCLUDE_COMM_SYSTEM_OPTIX_RENDERER_MESSAGE_H
 #define INCLUDE_COMM_SYSTEM_OPTIX_RENDERER_MESSAGE_H
-/// STL
-#include <vector>
 namespace comm {
-	/**
-	*	Available Camera types
-	*/
-	enum class CamType : std::size_t {
-		None = 0,
-		Pinhole,
-		Panoramic
+	class OptiXRendererMessage {
+	public:
+		explicit OptiXRendererMessage(const bool& topExists);
+		const bool topExists() const { return mTopExists; }
+	private:
+		bool mTopExists;
 	};
 
 	/**
-	*
+	*	Constructor
 	*/
-	class OptiXRendererMessage {
-	public:
-		OptiXRendererMessage(const CamType& type)
-			: mCamType(type)
-		{ }
-		const CamType cameraType() const { return mCamType; }
-	private:
-		CamType mCamType;
-	};
+	OptiXRendererMessage::OptiXRendererMessage(const bool& topExists)
+		: mTopExists(topExists)
+	{ }
 }	//	!namespace comm
 #endif // !INCLUDE_COMM_SYSTEM_OPTIX_RENDERER_MESSAGE_H
 

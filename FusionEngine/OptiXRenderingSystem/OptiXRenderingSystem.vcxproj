@@ -90,12 +90,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\optix_rendering_system\float3_program.h" />
-    <ClInclude Include="..\include\optix_rendering_system\miss_program.h" />
+    <ClInclude Include="..\include\optix_rendering_system\simple_miss_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\exception_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\optix_rendering_system.h" />
     <ClInclude Include="..\include\optix_rendering_system\pinhole_cam_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\rt_program.h" />
-    <ClInclude Include="solid_color_program.h" />
+    <ClInclude Include="..\include\optix_rendering_system\solid_color_program.h" />
+    <ClInclude Include="..\src\CUDA\helpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\optix_rendering_system\test_optix_renderer.cpp" />

@@ -30,6 +30,9 @@
 #include <ptx_compiler/ptx_compiler.h>
 /// Renderer
 #include <optix_rendering_system/optix_rendering_system.h>
+#include <optix_rendering_system/solid_color_program.h>
+#include <optix_rendering_system/exception_program.h>
+#include <optix_rendering_system/simple_miss_program.h>
 /// UI
 #include <editor_ui/menu_bar.h>
 #include <editor_ui/file_menu.h>
@@ -43,9 +46,13 @@
 /**
 *	Globals
 */
-static std::size_t AppWidth = 1920;
-static std::size_t AppHeight = 1080;
+static std::size_t AppWidth = 1440;
+static std::size_t AppHeight = 720;
 static const ImVec4 clearColor(0.2f, 0.2f, 0.2f, 1.0f);
+/// Programs Related
+optix::float3 gSolidColorProgVal = optix::make_float3(0.2f, 0.2f, 0.2f);
+optix::float3 gExceptionProgVal = optix::make_float3(1.0f, 0.0f, 0.0f);
+optix::float3 gSimpleMissProgVal = optix::make_float3(0.5f, 0.8f, 0.8f);
 
 // GLFW error callback
 static void glfw_error_callback(int error, const char* description) {
@@ -62,7 +69,7 @@ int main(int argc, char* argv[]) {
 	/********************
 	*	Argument Parsing
 	*********************/
-	CLI::App cli{ "360Fusion: 4D - 360 video Fusion" };
+	//CLI::App cli{ "360Fusion: 4D - 360 video Fusion" };
 	
 	/*******************************
 	*	Graphics: GL-Imgui Related
@@ -90,8 +97,8 @@ int main(int argc, char* argv[]) {
 	imguiStyle.ColumnsMinSpacing = 0.0f;
 	imguiStyle.FrameBorderSize = 1.0f;
 	imguiStyle.ScrollbarRounding = 2.0f;
-	imguiStyle.WindowBorderSize = 1.0f;
-	imguiStyle.WindowRounding = 5.0f;
+	imguiStyle.WindowBorderSize = 0.5f;
+	imguiStyle.WindowRounding = 0.0f;
 	imguiStyle.WindowTitleAlign = ImVec2(0.5f, 0.5f);
 	ImFont* font = imguiIO.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Calibri.ttf", 11.0f, NULL, NULL);
 	IM_ASSERT(font != NULL);
@@ -116,21 +123,27 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<fs::Filesystem> filesystem =
 		std::make_shared<fs::Filesystem>();
 	/// PTX Compiler
+	// TODO: Maybe do not use hard coded paths (except for cuda)
 	std::shared_ptr<ptx::PTXCompiler> ptxCompiler =
 		std::make_shared<ptx::PTXCompiler>();
 	ptxCompiler->setCudaArch(30);
 	ptxCompiler->setHostPlatform("x64");
+	ptxCompiler->setCompileConfiguration("Debug");
 	ptxCompiler->setRdc(true);
 	ptxCompiler->setUseFastMath(true);
 	ptxCompiler->addOptiXIncludeDir("..\\..\\src\\ptx_mapping_system\\CUDA");
+	ptxCompiler->addIncludeDir("..\\src\\CUDA");
 	ptxCompiler->addIncludeDir("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.2/include");
 	ptxCompiler->addIncludeDir("D:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
 	/// OptiX Scene Mapper
 	std::shared_ptr<map::SceneMapper> sceneMapper =
 		std::make_shared<map::SceneMapper>(ctx);
 	/// OptiX renderer
+	/// Ray Traycing Programs
+	/// OPTIX Renderer
 	std::shared_ptr<rt::OptiXRenderer> optixRenderer =
-		std::make_shared<rt::OptiXRenderer>(ctx, AppWidth, AppHeight);
+		std::make_shared<rt::OptiXRenderer>(ctx, AppWidth, AppHeight, ptxCompiler);
+	
 	/// UI Related
 	std::shared_ptr<ui::MenuBar> menuBar =
 		std::make_shared<ui::MenuBar>();
@@ -187,8 +200,8 @@ int main(int argc, char* argv[]) {
 		}
 		menuBar->render();
 		/// Render Widgets
-		ptxCompilerWidget->render();
-		viewportWidget->render();
+		//ptxCompilerWidget->render();
+		//viewportWidget->render();
 		/**********************
 		*	End of Whatevah
 		**********************/

@@ -6,6 +6,8 @@
 #include <optix_mapping_system/geometry_mapper.h>
 #include <optix_mapping_system/geometry_instance_mapper.h>
 #include <scene/scene.h>
+// TODO: Check if ptx compiler needed
+#include <ptx_compiler/ptx_compiler.h>
 /// STL
 #include <memory>
 #include <functional>

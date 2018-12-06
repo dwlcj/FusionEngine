@@ -51,8 +51,8 @@
     <ClInclude Include="..\include\comm_system\camera_message.h" />
     <ClInclude Include="..\include\comm_system\filesystem_message.h" />
     <ClInclude Include="..\include\comm_system\float3_program_message.h" />
-    <ClInclude Include="..\include\comm_system\optix_renderer_message.h" />
     <ClInclude Include="..\include\comm_system\ptx_compiler_message.h" />
+    <ClInclude Include="optix_renderer_message.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\comm_system\test_comm.cpp" />

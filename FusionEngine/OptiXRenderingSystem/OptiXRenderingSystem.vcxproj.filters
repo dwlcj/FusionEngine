@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\CUDA">
+      <UniqueIdentifier>{234e1618-9b10-481e-a0e1-791fd1f64c5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\optix_rendering_system\optix_rendering_system.h">
@@ -21,19 +24,22 @@
     <ClInclude Include="..\include\optix_rendering_system\rt_program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\optix_rendering_system\miss_program.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\optix_rendering_system\exception_program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\optix_rendering_system\pinhole_cam_program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="solid_color_program.h">
+    <ClInclude Include="..\include\optix_rendering_system\float3_program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\optix_rendering_system\float3_program.h">
+    <ClInclude Include="..\include\optix_rendering_system\solid_color_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\CUDA\helpers.h">
+      <Filter>Source Files\CUDA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optix_rendering_system\simple_miss_program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

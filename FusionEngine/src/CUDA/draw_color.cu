@@ -33,10 +33,9 @@ using namespace optix;
 
 rtDeclareVariable(uint2, launch_index, rtLaunchIndex, );
 rtBuffer<uchar4, 2>   output_buffer;
-
 rtDeclareVariable(float3,                draw_color, , );
 
 RT_PROGRAM void draw_solid_color()
 {
-  output_buffer[launch_index] = make_uchar4(draw_color.z * 255, draw_color.y * 255, draw_color.x * 255, 255);
+  output_buffer[launch_index] = make_uchar4(draw_color.x * 255, draw_color.y * 255, draw_color.z * 255, 255);
 }
