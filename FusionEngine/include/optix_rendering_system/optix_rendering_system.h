@@ -35,9 +35,9 @@ namespace rt {
 			std::shared_ptr<ptx::PTXCompiler> compiler);
 		void render();
 		std::function<void(const comm::OptiXRendererMessage&)> messageFlowIn();
+		std::function<void(const comm::CameraMessage&)> pinholeCameraMessageFlowIn();
 	protected:
 		void createPboBuffer();
-		void setTopExists(const bool& exists);
 	private:
 		std::size_t mLaunchWidth;
 		std::size_t mLaunchHeight;
@@ -104,14 +104,13 @@ namespace rt {
 		// context related
 		// TODO: add all entry points
 		try {
-			mContext->setEntryPointCount(2u);
+			mContext->setEntryPointCount(1u);
 			mContext->setRayTypeCount(1u);
 			mContext->setRayGenerationProgram(0u, mSolidColorProgram->program());
 			mContext->setExceptionProgram(0u, mExceptionProgram->program());
 			mContext->setMissProgram(0u, mSimpleMissProgram->program());
-			mContext->setRayGenerationProgram(1u, mPinholeCameraProgram->program());
-			mContext->setExceptionProgram(1u, mExceptionProgram->program());
-			mContext->setMissProgram(0u, mSimpleMissProgram->program());
+			//mContext->setRayGenerationProgram(1u, mPinholeCameraProgram->program());
+			//mContext->setExceptionProgram(1u, mExceptionProgram->program());
 		}
 		catch (optix::Exception& ex) {
 			LOG_ERROR << ex.getErrorCode() << ": " << ex.getErrorString();
@@ -214,8 +213,15 @@ namespace rt {
 	*/
 	std::function<void(const comm::OptiXRendererMessage&)> OptiXRenderer::messageFlowIn() {
 		return [this](const comm::OptiXRendererMessage& message) {
-			setTopExists(message.topExists());
+			
 		};
+	}
+
+	/**
+	*	Exposes Pinhole Camera's messageFlowIn
+	*/	
+	std::function<void(const comm::CameraMessage&)> OptiXRenderer::pinholeCameraMessageFlowIn() {
+		return mPinholeCameraProgram->messageFlowIn();
 	}
 
 

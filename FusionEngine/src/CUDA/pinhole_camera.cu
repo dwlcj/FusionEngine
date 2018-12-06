@@ -46,7 +46,7 @@ rtDeclareVariable(float3,        W, , );
 rtDeclareVariable(float,         scene_epsilon, , );
 rtBuffer<uchar4, 2>              output_buffer;
 rtDeclareVariable(rtObject,      top_object, , );
-
+rtDeclareVariable(bool, topExists, , );
 rtDeclareVariable(unsigned int,  radiance_ray_type, , );
 rtDeclareVariable(uint2, launch_index, rtLaunchIndex, );
 rtDeclareVariable(uint2, launch_dim,   rtLaunchDim, );
@@ -65,7 +65,9 @@ RT_PROGRAM void pinhole_camera()
   PerRayData_radiance prd;
   prd.importance = 1.f;
   prd.depth = 0;
-  rtTrace(top_object, ray, prd);
+  if (topExists){
+	rtTrace(top_object, ray, prd);
+  }
   output_buffer[launch_index] = make_color( prd.result );
 }
 

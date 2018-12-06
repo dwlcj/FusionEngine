@@ -1,5 +1,7 @@
 #ifndef INCLUDE_OPTIX_MAPPING_SYSTEM_SCENE_MAPPER_H
 #define INCLUDE_OPTIX_MAPPING_SYSTEM_SCENE_MAPPER_H
+/// RX
+#include <rxcpp/rx.hpp>
 /// Logging
 #include <plog/Log.h>
 /// Fusion
@@ -8,6 +10,7 @@
 #include <scene/scene.h>
 // TODO: Check if ptx compiler needed
 #include <ptx_compiler/ptx_compiler.h>
+#include <comm_system/camera_message.h>
 /// STL
 #include <memory>
 #include <functional>
@@ -20,6 +23,7 @@ namespace map {
 		explicit SceneMapper(optix::Context& ctx);
 		void map(const scene::Scene& s);
 		std::function<void(const scene::Scene&)> sceneFlowIn();
+		rxcpp::observable<comm::CameraMessage> cameraMessageFlowOut();
 	protected:
 		void compressScene(const scene::Scene& s);
 	private:
@@ -28,6 +32,7 @@ namespace map {
 		std::vector<optix::Transform> mTransformNodes;
 		std::shared_ptr<GeometryMapper> mGeometryMapper;
 		std::shared_ptr<GinstanceMapper> mGinstanceMapper;
+		rxcpp::subjects::subject<comm::CameraMessage> mCameraMessageFlowOut;
 	};
 
 	/**
@@ -104,7 +109,16 @@ namespace map {
 	std::function<void(const scene::Scene&)> SceneMapper::sceneFlowIn() {
 		return [this](const scene::Scene& s) {
 			map(s);
+			comm::CameraMessage message(comm::CamMessageType::topExists, true);
+			mCameraMessageFlowOut.get_subscriber().on_next(message);
 		};
+	}
+
+	/**
+	*	Exposes Camera Flow out for subscription
+	*/
+	rxcpp::observable<comm::CameraMessage> SceneMapper::cameraMessageFlowOut() {
+		return mCameraMessageFlowOut.get_observable().as_dynamic();
 	}
 }
 #endif // !INCLUDE_OPTIX_MAPPING_SYSTEM_SCENE_MAPPER_H

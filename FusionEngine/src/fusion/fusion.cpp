@@ -166,9 +166,10 @@ int main(int argc, char* argv[]) {
 	ptxCompilerWidget->messageFlowOut().subscribe(ptxCompiler->messageFlowIn());
 	/// File Menu -> Filesystem
 	fileMenu->messageFlowOut().subscribe(filesystem->messageFlowIn());
-	/// Filesystem /-> scene Mapper
+	/// Filesystem -> scene Mapper
 	filesystem->sceneFlowOut().subscribe(sceneMapper->sceneFlowIn());
-
+	/// Scene Mapper -> OptiXRenderer
+	sceneMapper->cameraMessageFlowOut().subscribe(optixRenderer->pinholeCameraMessageFlowIn());
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize;

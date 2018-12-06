@@ -30,6 +30,7 @@ namespace rt {
 		void setEye(const optix::float3& eye);
 		void setLookat(const optix::float3& lookat);
 		void setUp(const optix::float3& up);
+		void setTopExists(const bool& exists);
 		std::function<void(const comm::CameraMessage&)> messageFlowIn();
 	protected:
 		void calculateCamParams();
@@ -46,6 +47,7 @@ namespace rt {
 		float mAspectRatio;
 		std::size_t mViewportWidth;
 		std::size_t mViewportHeight;
+		int mTopExists;
 	};
 
 	/**
@@ -67,6 +69,7 @@ namespace rt {
 		mFOV = 35.0f;
 		mAspectRatio = static_cast<float>(mViewportWidth) / static_cast<float>(mViewportHeight);
 		mTransMat = optix::Matrix4x4::identity();
+		mTopExists = 0;
 	}
 
 	/**
@@ -94,11 +97,40 @@ namespace rt {
 	}
 
 	/**
+	*	Set's Program's topExists Variable
+	*/
+	void PinholeCameraProgram::setTopExists(const bool& exists) {
+		mTopExists = exists;
+		this->program()["topExists"]->setInt(exists);
+	}
+
+	/**
 	*	Message Flow in
 	*/
 	std::function<void(const comm::CameraMessage&)> PinholeCameraProgram::messageFlowIn() {
 		return [this](const comm::CameraMessage& message) {
-
+			switch (message.type())
+			{
+			case comm::CamMessageType::topExists:
+				/// topExists modified
+				setTopExists(message.topExists());
+				break;
+			case comm::CamMessageType::Eye:
+				/// eye modifies
+				setEye(message.eye());
+				break;
+			case comm::CamMessageType::Lookat:
+				/// lookat modified
+				setLookat(message.lookat());
+				break;
+			case comm::CamMessageType::Up:
+				/// up modified
+				setUp(message.up());
+				break;
+			default:
+				LOG_WARNING << "Unknown command.";
+				break;
+			}
 		};
 	}
 
