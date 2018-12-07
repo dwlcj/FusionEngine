@@ -42,6 +42,12 @@
     <ClInclude Include="..\include\optix_rendering_system\simple_miss_program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optix_rendering_system\bounding_box_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optix_rendering_system\intersection_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\optix_rendering_system\test_optix_renderer.cpp">
