@@ -133,8 +133,15 @@ int main(int argc, char* argv[]) {
 	ptxCompiler->setUseFastMath(true);
 	ptxCompiler->addOptiXIncludeDir("..\\..\\src\\ptx_mapping_system\\CUDA");
 	ptxCompiler->addIncludeDir("..\\src\\CUDA");
+#ifdef CERTH
 	ptxCompiler->addIncludeDir("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v9.2/include");
 	ptxCompiler->addIncludeDir("D:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
+#else
+	ptxCompiler->addIncludeDir("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/include");
+	ptxCompiler->addIncludeDir("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
+#endif // DEBUG
+
+	
 	/// OptiX Scene Mapper
 	std::shared_ptr<map::SceneMapper> sceneMapper =
 		std::make_shared<map::SceneMapper>(ctx);
@@ -170,6 +177,8 @@ int main(int argc, char* argv[]) {
 	filesystem->sceneFlowOut().subscribe(sceneMapper->sceneFlowIn());
 	/// Scene Mapper -> OptiXRenderer
 	sceneMapper->cameraMessageFlowOut().subscribe(optixRenderer->pinholeCameraMessageFlowIn());
+	/// Scen Mapper -> OptiX Renderer
+	sceneMapper->topObjectFlowOUt().subscribe(optixRenderer->topObjectFlowIn());
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize;

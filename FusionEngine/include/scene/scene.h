@@ -23,6 +23,8 @@ namespace scene {
 		const optix::Aabb bbox() const { return mBbox; }
 		void insertMesh(const Mesh& m);
 		void insertMaterial(const Material& m);
+	protected:
+		void calcBbox();
 	private:
 		std::size_t mId;
 		std::string mName;

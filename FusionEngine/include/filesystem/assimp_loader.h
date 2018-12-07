@@ -137,6 +137,8 @@ namespace fs {
 		}	//	!face loop
 		// material index
 		mesh.insertMaterialIndex(m->mMaterialIndex);
+		mesh.calcBbox();
+		mesh.center();
 		return mesh;
 	}
 

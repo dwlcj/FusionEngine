@@ -24,6 +24,7 @@ namespace map {
 		void map(const scene::Scene& s);
 		std::function<void(const scene::Scene&)> sceneFlowIn();
 		rxcpp::observable<comm::CameraMessage> cameraMessageFlowOut();
+		rxcpp::observable<optix::Group> topObjectFlowOUt();
 	protected:
 		void compressScene(const scene::Scene& s);
 	private:
@@ -33,6 +34,7 @@ namespace map {
 		std::shared_ptr<GeometryMapper> mGeometryMapper;
 		std::shared_ptr<GinstanceMapper> mGinstanceMapper;
 		rxcpp::subjects::subject<comm::CameraMessage> mCameraMessageFlowOut;
+		rxcpp::subjects::subject<optix::Group> mTopObjectFlowOut;
 	};
 
 	/**
@@ -100,7 +102,9 @@ namespace map {
 			optix::Transform transform = mContext->createTransform();
 			transform->setChild(ggroup);
 			mGroupNode->addChild(transform);
+			mGroupNode->setAcceleration(mContext->createAcceleration("Trbvh"));
 		}
+		mTopObjectFlowOut.get_subscriber().on_next(mGroupNode);
 	}
 
 	/**
@@ -119,6 +123,13 @@ namespace map {
 	*/
 	rxcpp::observable<comm::CameraMessage> SceneMapper::cameraMessageFlowOut() {
 		return mCameraMessageFlowOut.get_observable().as_dynamic();
+	}
+
+	/**
+	*	
+	*/
+	rxcpp::observable<optix::Group> SceneMapper::topObjectFlowOUt() {
+		return mTopObjectFlowOut.get_observable().as_dynamic();
 	}
 }
 #endif // !INCLUDE_OPTIX_MAPPING_SYSTEM_SCENE_MAPPER_H

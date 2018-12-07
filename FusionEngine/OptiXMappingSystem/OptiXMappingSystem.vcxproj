@@ -95,8 +95,13 @@
     <ClCompile Include="..\src\optix_mapping_system\test_optix_mapping_system.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\optix_mapping_system\CUDA\phong.cu" />
-    <None Include="..\src\optix_mapping_system\CUDA\triangle_mesh.cu" />
+    <None Include="..\src\CUDA\constantbg.cu" />
+    <None Include="..\src\CUDA\draw_color.cu" />
+    <None Include="..\src\CUDA\env_map_miss.cu" />
+    <None Include="..\src\CUDA\exception.cu" />
+    <None Include="..\src\CUDA\phong.cu" />
+    <None Include="..\src\CUDA\pinhole_camera.cu" />
+    <None Include="..\src\CUDA\triangle_mesh.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
