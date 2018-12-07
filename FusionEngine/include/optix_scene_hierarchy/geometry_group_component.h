@@ -16,7 +16,9 @@ namespace tree {
 		const GeometryInstanceComponent ginstanceComp() const { return mGInstanceComponent; }
 		GeometryInstanceComponent& ginstanceComp() { return mGInstanceComponent; }
 		void setGinstanceComponent(const GeometryInstanceComponent& gistanceComp);
+		void setAcceleration(const optix::Acceleration& accel);
 	private:
+		optix::Acceleration mAcceleration;
 		GeometryInstanceComponent mGInstanceComponent;
 	};
 
@@ -25,7 +27,9 @@ namespace tree {
 	*/
 	GeometryGroupComponent::GeometryGroupComponent(const optix::GeometryGroup& ggroup)
 		: Component(ggroup)
-	{ }
+	{ 
+		this->get()->setChildCount(1u);
+	}
 
 	/**
 	*	Constructor
@@ -33,5 +37,20 @@ namespace tree {
 	GeometryGroupComponent::GeometryGroupComponent(const optix::GeometryGroup& ggroup, const GeometryInstanceComponent& gistanceComp) 
 		: Component(ggroup), mGInstanceComponent(gistanceComp)
 	{ }
+
+	/**
+	*	sets Geometry Instance Component
+	*/
+	void tree::GeometryGroupComponent::setGinstanceComponent(const GeometryInstanceComponent & gistanceComp) {
+		mGInstanceComponent = gistanceComp;
+		this->get()->addChild(mGInstanceComponent.get());
+	}
+	/**
+	*	sets Acceleration Structure
+	*/
+	void GeometryGroupComponent::setAcceleration(const optix::Acceleration & accel) {
+		mAcceleration = accel;
+		this->get()->setAcceleration(mAcceleration);
+	}
 }
 #endif // !INCLUDE_OPTIX_SCENE_HIERARCHY_GEOMETRY_GROUP_COMPONENT_H

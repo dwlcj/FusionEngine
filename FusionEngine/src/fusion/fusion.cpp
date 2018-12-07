@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
 #else
 	ptxCompiler->addIncludeDir("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/include");
 	ptxCompiler->addIncludeDir("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
-#endif // DEBUG
+#endif // CERTH
 	/// OptiX Scene Mapper
 	std::shared_ptr<map::SceneMapper> sceneMapper =
 		std::make_shared<map::SceneMapper>(ctx);
@@ -150,7 +150,7 @@ int main(int argc, char* argv[]) {
 		std::make_shared<rt::OptiXRenderer>(ctx, AppWidth, AppHeight, ptxCompiler);
 	/// Scene Tree
 	std::shared_ptr<tree::SceneTree> sceneTree =
-		std::make_shared<tree::SceneTree>(ctx);
+		std::make_shared<tree::SceneTree>(ctx, ptxCompiler, AppWidth, AppHeight);
 	/// UI Related
 	std::shared_ptr<ui::MenuBar> menuBar =
 		std::make_shared<ui::MenuBar>();
@@ -174,11 +174,13 @@ int main(int argc, char* argv[]) {
 	/// File Menu -> Filesystem
 	fileMenu->messageFlowOut().subscribe(filesystem->messageFlowIn());
 	/// Filesystem -> scene Mapper
-	filesystem->sceneFlowOut().subscribe(sceneMapper->sceneFlowIn());
+	//filesystem->sceneFlowOut().subscribe(sceneMapper->sceneFlowIn());
+	/// FileSystem -> SceneTree
+	filesystem->sceneFlowOut().subscribe(sceneTree->sceneFlowIn());
 	/// Scene Mapper -> OptiXRenderer
 	sceneMapper->cameraMessageFlowOut().subscribe(optixRenderer->pinholeCameraMessageFlowIn());
 	/// Scen Mapper -> OptiX Renderer
-	sceneMapper->topObjectFlowOUt().subscribe(optixRenderer->topObjectFlowIn());
+	//sceneMapper->topObjectFlowOUt().subscribe(optixRenderer->topObjectFlowIn());
 	ImGuiWindowFlags windowFlags = 0;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar;
 	windowFlags |= ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize;

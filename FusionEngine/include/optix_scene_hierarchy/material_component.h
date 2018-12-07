@@ -34,6 +34,8 @@ namespace tree {
 		void setSpecularColor(const optix::float3& color);
 		void setShininess(const float& val);
 		void setTextureSampler(const optix::TextureSampler& sampler);
+		void setClosestHitProgram(const optix::Program& program);
+		void setAnyHitProgram(const optix::Program& program);
 	private:
 		optix::float3 mDiffusion;
 		optix::float3 mSpecular;
@@ -48,7 +50,7 @@ namespace tree {
 	/**
 	*	Constructor
 	*/
-	MaterialComponent::MaterialComponent(const optix::Material& mat) 
+	MaterialComponent::MaterialComponent(const optix::Material& mat)
 		: Component(mat)
 	{ }
 
@@ -56,13 +58,13 @@ namespace tree {
 	*	Constructor
 	*/
 	MaterialComponent::MaterialComponent(
-		const optix::Material& mat, 
-		const optix::float3& diff, 
-		const optix::float3& rad, 
-		const optix::float3& spec, 
-		const optix::float3& amb, 
+		const optix::Material& mat,
+		const optix::float3& diff,
+		const optix::float3& rad,
+		const optix::float3& spec,
+		const optix::float3& amb,
 		const float& shin)
-		: Component(mat), 
+		: Component(mat),
 		mDiffusion(diff),
 		mSpecular(spec),
 		mRadiance(rad),
@@ -105,7 +107,7 @@ namespace tree {
 	/**
 	*	sets shininess
 	*/
-	void MaterialComponent::setShininess(const float& val){
+	void MaterialComponent::setShininess(const float& val) {
 		mShininess = val;
 		mClosestHitProgram["phong_exp"]->setFloat(val);
 	}
@@ -117,6 +119,21 @@ namespace tree {
 		mTextureSampler = sampler;
 		mClosestHitProgram["Kd_map"]->setTextureSampler(sampler);
 	}
-}
+
+	/**
+	*	Sets closest hit program
+	*/
+	void MaterialComponent::setClosestHitProgram(const optix::Program& program) {
+		mClosestHitProgram = program;
+	}
+
+	/**
+	*	Sets anyhit program
+	*/
+	void MaterialComponent::setAnyHitProgram(const optix::Program& program) {
+		mAnyHitProgram = program;
+	}
+
+}	//	!namespace tree
 #endif // !INCLUDE_OPTIX_SCENE_HIERARCHY_MATERIAL_COMPONENT_H
 

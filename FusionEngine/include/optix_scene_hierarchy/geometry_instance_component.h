@@ -83,6 +83,7 @@ namespace tree {
 	*/
 	void GeometryInstanceComponent::addMaterialComponent(const MaterialComponent& matComp) {
 		mMaterialComponents.emplace_back(matComp);
+		this->get()->addMaterial(mMaterialComponents.back().get());
 	}
 
 	/**
@@ -90,6 +91,7 @@ namespace tree {
 	*/
 	void GeometryInstanceComponent::addGeometryComponent(const GeometryComponent& geomComp) {
 		mGeometryComponent = geomComp;
+		this->get()->setGeometry(mGeometryComponent.get());
 	}
 }	//	!namespace tree
 #endif // !INCLUDE_OPTIX_SCENE_HIERARCHY_GEOMETRY_INSTANCE_COMPONENT_H

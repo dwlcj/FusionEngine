@@ -73,46 +73,46 @@ namespace rt {
 		createPboBuffer();
 		// Create Programs
 		/// Solid Color Program
-		mSolidColorProgram = std::make_shared<SolidColorProgram>(
-			mContext,
-			std::string("draw_solid_color"),
-			std::string("\\res\\ptx\\draw_color.ptx"),
-			std::string("..\\src\\CUDA\\draw_color.cu"),
-			optix::make_float3(0.2f, 0.2f, 0.2f),
-			compiler);
-		/// Simple Miss Program
-		mSimpleMissProgram = std::make_shared<SimpleMissProgram>(
-			mContext,
-			std::string("miss"),
-			std::string("\\res\\ptx\\simple_miss.ptx"),
-			std::string("..\\src\\CUDA\\constantbg.cu"),
-			optix::make_float3(0.0f, 0.8f, 0.8f),
-			compiler);
-		/// Exception Program
-		mExceptionProgram = std::make_shared<ExceptionProgram>(
-			mContext,
-			std::string("exception"),
-			std::string("\\res\\ptx\\exception.ptx"),
-			std::string("..\\src\\CUDA\\exception.cu"),
-			optix::make_float3(1.0f, 0.0f, 0.0f),
-			compiler);
-		/// Pinhole Camera Program
-		mPinholeCameraProgram =
-			std::make_shared<PinholeCameraProgram>(
-				mContext,
-				std::string("pinhole_camera"),
-				std::string("\\res\\ptx\\pinhole_camera.ptx"),
-				std::string("..\\src\\CUDA\\pinhole_camera.cu"),
-				compiler,
-				mLaunchWidth, mLaunchHeight);
+		//mSolidColorProgram = std::make_shared<SolidColorProgram>(
+		//	mContext,
+		//	std::string("draw_solid_color"),
+		//	std::string("\\res\\ptx\\draw_color.ptx"),
+		//	std::string("..\\src\\CUDA\\draw_color.cu"),
+		//	optix::make_float3(0.2f, 0.2f, 0.2f),
+		//	compiler);
+		///// Simple Miss Program
+		//mSimpleMissProgram = std::make_shared<SimpleMissProgram>(
+		//	mContext,
+		//	std::string("miss"),
+		//	std::string("\\res\\ptx\\simple_miss.ptx"),
+		//	std::string("..\\src\\CUDA\\constantbg.cu"),
+		//	optix::make_float3(0.0f, 0.8f, 0.8f),
+		//	compiler);
+		///// Exception Program
+		//mExceptionProgram = std::make_shared<ExceptionProgram>(
+		//	mContext,
+		//	std::string("exception"),
+		//	std::string("\\res\\ptx\\exception.ptx"),
+		//	std::string("..\\src\\CUDA\\exception.cu"),
+		//	optix::make_float3(1.0f, 0.0f, 0.0f),
+		//	compiler);
+		///// Pinhole Camera Program
+		//mPinholeCameraProgram =
+		//	std::make_shared<PinholeCameraProgram>(
+		//		mContext,
+		//		std::string("pinhole_camera"),
+		//		std::string("\\res\\ptx\\pinhole_camera.ptx"),
+		//		std::string("..\\src\\CUDA\\pinhole_camera.cu"),
+		//		compiler,
+		//		mLaunchWidth, mLaunchHeight);
 		// context related
 		// TODO: add all entry points
 		try {
-			mContext->setEntryPointCount(1u);
-			mContext->setRayTypeCount(1u);
-			mContext->setRayGenerationProgram(0u, mSolidColorProgram->program());
-			mContext->setExceptionProgram(0u, mExceptionProgram->program());
-			mContext->setMissProgram(0u, mSimpleMissProgram->program());
+			//mContext->setEntryPointCount(2u);
+			//mContext->setRayTypeCount(1u);
+			//mContext->setRayGenerationProgram(0u, mSolidColorProgram->program());
+			//mContext->setExceptionProgram(0u, mExceptionProgram->program());
+			//mContext->setMissProgram(0u, mSimpleMissProgram->program());
 			//mContext->setRayGenerationProgram(1u, mPinholeCameraProgram->program());
 			//mContext->setExceptionProgram(1u, mExceptionProgram->program());
 		}
@@ -238,13 +238,13 @@ namespace rt {
 			// between programs
 			// Maybe I should attach geometry related variables to geometry instance
 			// groups to context
-			if (!mTopExists) {
-				mContext["top_object"]->set(topObj);
-				mContext["top_shadower"]->set(topObj);
-				mPinholeCameraProgram->setTopObject(topObj);
-				mContext->setEntryPointCount(2u);
-				mContext->setRayGenerationProgram(1u, mPinholeCameraProgram->program());
-			}
+			//if (!mTopExists) {
+			//	mContext["top_object"]->set(topObj);
+			//	mContext["top_shadower"]->set(topObj);
+			//	mPinholeCameraProgram->setTopObject(topObj);
+			//	mContext->setEntryPointCount(2u);
+			//	mContext->setRayGenerationProgram(1u, mPinholeCameraProgram->program());
+			//}
 		};
 	}
 

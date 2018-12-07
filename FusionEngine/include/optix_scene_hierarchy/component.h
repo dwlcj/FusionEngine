@@ -17,7 +17,7 @@ namespace tree {
 	*	Constructor
 	*/
 	template <typename CompType>
-	Component::Component(const CompType& type) {
+	Component<CompType>::Component(const CompType& type) {
 		mInstance = type;
 	}
 }

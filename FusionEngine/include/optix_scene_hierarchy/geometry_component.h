@@ -22,6 +22,8 @@ namespace tree {
 			const optix::Buffer& materialsBuffer,
 			const optix::Program& interProg,
 			const optix::Program& bboxProg);
+		const optix::Buffer& getVertexBuffer() const { return mVertexBuffer; }
+		const optix::Buffer& getIndexBuffer() const { return mIndexBuffer; }
 		void setVertexBuffer(const optix::Buffer& buffer);
 		void setIndexBuffer(const optix::Buffer& buffer);
 		void setNormalsBuffer(const optix::Buffer& buffer);
@@ -29,7 +31,9 @@ namespace tree {
 		void setMaterialsBuffer(const optix::Buffer& buffer);
 		void setBoundingBoxProgram(const optix::Program& program);
 		void setIntersectionProgram(const optix::Program& program);
+		void setPrimitiveCount(const std::size_t& count);
 	private:
+		std::size_t mFaceCount;
 		optix::Program mIntersectionProgram;
 		optix::Program mBoundingBoxProgram;
 		optix::Buffer mVertexBuffer;
@@ -83,6 +87,7 @@ namespace tree {
 	void GeometryComponent::setIndexBuffer(const optix::Buffer& buffer) {
 		mIndexBuffer = buffer;
 		mIntersectionProgram["index_buffer"]->setBuffer(buffer);
+		mBoundingBoxProgram["index_buffer"]->setBuffer(buffer);
 	}
 
 	/**
@@ -106,7 +111,7 @@ namespace tree {
 	*/
 	void GeometryComponent::setMaterialsBuffer(const optix::Buffer& buffer) {
 		mMaterialsBuffer = buffer;
-		mIntersectionProgram["materials_buffer"]->setBuffer(buffer);
+		mIntersectionProgram["material_buffer"]->setBuffer(buffer);
 	}
 
 	/**
@@ -114,6 +119,12 @@ namespace tree {
 	*/
 	void GeometryComponent::setIntersectionProgram(const optix::Program& program) {
 		mIntersectionProgram = program;
+		this->get()->setIntersectionProgram(program);
+	}
+
+	void GeometryComponent::setPrimitiveCount(const std::size_t & count) {
+		mFaceCount = count;
+		this->get()->setPrimitiveCount(count);
 	}
 
 	/**
@@ -121,6 +132,7 @@ namespace tree {
 	*/
 	void GeometryComponent::setBoundingBoxProgram(const optix::Program& program) {
 		mBoundingBoxProgram = program;
+		this->get()->setBoundingBoxProgram(program);
 	}
 }	//	!namespace tree
 #endif // !INCLUE_OPTIX_SCENE_HIERARCHY_GEOMETRY_COMPONENT_H

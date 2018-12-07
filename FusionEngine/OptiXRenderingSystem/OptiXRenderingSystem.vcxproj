@@ -89,7 +89,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\optix_rendering_system\any_hit_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\bounding_box_program.h" />
+    <ClInclude Include="..\include\optix_rendering_system\closest_hit_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\float3_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\intersection_program.h" />
     <ClInclude Include="..\include\optix_rendering_system\simple_miss_program.h" />

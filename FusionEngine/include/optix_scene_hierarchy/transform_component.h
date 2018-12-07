@@ -58,6 +58,7 @@ namespace tree {
 	*/
 	void TransformComponent::addGeometryGroupComponent(const GeometryGroupComponent& ggroupComp) {
 		mGGroupComponent = ggroupComp;
+		this->get()->setChild(mGGroupComponent.get());
 	}
 }
 #endif // !INCLUDE_OPTIX_SCENE_HIERARCHY_TRANSFORM_COMPONENT_H
