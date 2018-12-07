@@ -26,6 +26,8 @@
 #include <filesystem/filesystem.h>
 /// Scene Mapper
 #include <optix_mapping_system/scene_mapper.h>
+/// Scene Tree
+#include <optix_scene_hierarchy/scene_tree.h>
 /// PTX Compiler
 #include <ptx_compiler/ptx_compiler.h>
 /// Renderer
@@ -140,17 +142,15 @@ int main(int argc, char* argv[]) {
 	ptxCompiler->addIncludeDir("C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0/include");
 	ptxCompiler->addIncludeDir("E:\\_dev\\_Libraries\\NVIDIA\\OptiX51\\include");
 #endif // DEBUG
-
-	
 	/// OptiX Scene Mapper
 	std::shared_ptr<map::SceneMapper> sceneMapper =
 		std::make_shared<map::SceneMapper>(ctx);
-	/// OptiX renderer
-	/// Ray Traycing Programs
 	/// OPTIX Renderer
 	std::shared_ptr<rt::OptiXRenderer> optixRenderer =
 		std::make_shared<rt::OptiXRenderer>(ctx, AppWidth, AppHeight, ptxCompiler);
-	
+	/// Scene Tree
+	std::shared_ptr<tree::SceneTree> sceneTree =
+		std::make_shared<tree::SceneTree>(ctx);
 	/// UI Related
 	std::shared_ptr<ui::MenuBar> menuBar =
 		std::make_shared<ui::MenuBar>();
@@ -197,7 +197,6 @@ int main(int argc, char* argv[]) {
 		glViewport(0, 0, displayWidth, displayHeight);
 		glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		/********************
 		*	Do whatevah here
 		*********************/
@@ -212,6 +211,7 @@ int main(int argc, char* argv[]) {
 		/// Render Widgets
 		//ptxCompilerWidget->render();
 		//viewportWidget->render();
+
 		/**********************
 		*	End of Whatevah
 		**********************/

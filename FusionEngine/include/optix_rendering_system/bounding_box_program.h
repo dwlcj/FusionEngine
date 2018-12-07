@@ -15,9 +15,6 @@ namespace rt {
 			const std::string& ptxPath,
 			const std::string& cuPath,
 			const std::shared_ptr<ptx::PTXCompiler> compiler);
-	private:
-		optix::Buffer mVertexBuffer;
-		optix::Buffer mIndexBuffer;
 	};
 
 	/**

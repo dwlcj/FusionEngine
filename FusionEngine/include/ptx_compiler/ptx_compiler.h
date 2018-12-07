@@ -1,6 +1,6 @@
 #ifndef INCLUDE_PTX_COMPILER_PTX_COMPILER_H
 #define INCLUDE_PTX_COMPILER_PTX_COMPILER_H
-//#define CERTH
+#define CERTH
 #define DEBUG
 /// CUDA
 #include <nvrtc.h>
@@ -44,7 +44,7 @@ namespace ptx {
 		void setRdc(const bool& use);
 		void setCompileConfiguration(const std::string& conf);
 		const std::string compileStr(const std::string& filepath);
-		void compileFile(const std::string& cuFilepath, const std::string& outputFilepath);
+		const std::string compileFile(const std::string& cuFilepath, const std::string& outputFilepath);
 		std::function<void(const comm::PTXCompilerMessage&)> messageFlowIn();
 	protected:
 		const bool readSrcFile(const std::experimental::filesystem::path& filepath, std::string& srcStr);
@@ -309,13 +309,12 @@ namespace ptx {
 	/**
 	*	Compiles ptx and saves ptx file
 	*/
-	void PTXCompiler::compileFile(const std::string& cuFilepath, const std::string& outputFilepath) {
-#ifdef DEBUG
+	const std::string PTXCompiler::compileFile(const std::string& cuFilepath, const std::string& outputFilepath) {
 		const std::string ptxStr = compileStr(cuFilepath);
 		std::ofstream fileHandle(outputFilepath, std::ofstream::out);
 		fileHandle << ptxStr;
 		fileHandle.close();
-#endif // DEBUG
+		return ptxStr;
 	}
 
 	/**

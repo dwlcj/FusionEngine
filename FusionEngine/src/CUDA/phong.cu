@@ -44,7 +44,6 @@ rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 
 RT_PROGRAM void any_hit_shadow()
 {
-  //rtPrintf("Any hit\n");
   phongShadowed();
 }
 
@@ -72,7 +71,5 @@ RT_PROGRAM void closest_hit_radiance_textured()
   float3 ffnormal = faceforward( world_shading_normal, -ray.direction, world_geometric_normal );
   
   const float3 Kd_val = make_float3( tex2D( Kd_map, texcoord.x, texcoord.y ) );
-  //Kd_val = make_float3(Kd_val.x * 255, Kd_val.y * 255, Kd_val.z * 255);
-  //rtPrintf("Texture Value: (%f, %f, %f)\n", Kd_val.x, Kd_val.y, Kd_val.z);
   phongShade( Kd_val, Ka, Ks, Kr, phong_exp, ffnormal );
 }

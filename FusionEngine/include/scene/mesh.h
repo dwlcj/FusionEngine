@@ -23,8 +23,8 @@ namespace scene {
 		const std::vector<optix::float2> texCoords() const { return mTexCoords; }
 		const std::vector<optix::uint> materialIndices() const { return mMaterialIndices; }
 		const optix::Aabb bbox() const { return mBbox; }
-		const bool hasNormals();
-		const bool hasTexCoords();
+		const bool hasNormals() const;
+		const bool hasTexCoords() const;
 		const std::size_t vertexCount() const { return mVertexPositions.size(); }
 		const std::size_t faceCount() const { return mFaceIndices.size(); }
 		const std::size_t normalsCount() const { return mNormals.size(); }
@@ -70,7 +70,7 @@ namespace scene {
 	/*! Checks if normals vector is empty
 		Returns true if not empty
 	*/
-	const bool Mesh::hasNormals() {
+	const bool Mesh::hasNormals() const {
 		bool tmp;
 		tmp = (mNormals.empty()) ? false : true;
 		return tmp;
@@ -79,7 +79,7 @@ namespace scene {
 	/*! Checks if texture coordinates vector is empty
 	Returns true if not empty
 	*/
-	const bool Mesh::hasTexCoords() {
+	const bool Mesh::hasTexCoords() const {
 		bool tmp;
 		tmp = (mTexCoords.empty()) ? false : true;
 		return tmp;

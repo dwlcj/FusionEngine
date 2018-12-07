@@ -44,7 +44,7 @@ namespace rt {
 #ifdef DEBUG
 			try {
 				std::string ptx;
-				ptx = compiler->compileStr(mData.cuPath);
+				ptx = compiler->compileFile(mData.cuPath, mData.ptxPath);
 				mData.program = mData.context->createProgramFromPTXString(ptx, mData.name);
 			}
 			catch (optix::Exception& ex) {
@@ -67,9 +67,19 @@ namespace rt {
 			mData.program = mData.context->createProgramFromPTXString(mData.ptx, mData.name);
 		}
 		optix::Program& program() { return mData.program; }
+		const optix::Program newProgram();
 	private:
 		ProgramData mData;
 	};
+
+	/**
+	*	Creates new Program
+	*/
+	const optix::Program RTProgram::newProgram() {
+		optix::Program program = mData.context->createProgramFromPTXFile(mData.ptxPath, mData.name);
+		return program;
+	}
+
 }
 #endif // !INCLUDE_OPTIX_RENDERING_SYSTEM_RT_PROGRAM_H
 
