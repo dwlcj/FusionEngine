@@ -60,4 +60,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\CUDA\pinhole_camera.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\constantbg.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\draw_color.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\env_camera.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\env_map_miss.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\exception.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\phong.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\solid_color.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+    <None Include="..\src\CUDA\triangle_mesh.cu">
+      <Filter>Source Files\CUDA</Filter>
+    </None>
+  </ItemGroup>
 </Project>

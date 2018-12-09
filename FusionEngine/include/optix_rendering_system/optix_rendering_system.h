@@ -31,30 +31,18 @@ namespace rt {
 		explicit OptiXRenderer(
 			optix::Context& ctx,
 			const std::size_t& width,
-			const std::size_t& height,
-			std::shared_ptr<ptx::PTXCompiler> compiler);
-		void render();
+			const std::size_t& height);
+		void render(const unsigned int& launchIndex, optix::Context& ctx);
 		std::function<void(const comm::OptiXRendererMessage&)> messageFlowIn();
-		std::function<void(const comm::CameraMessage&)> pinholeCameraMessageFlowIn();
 		std::function<void(const optix::Group&)> topObjectFlowIn();
 	protected:
-		void createPboBuffer();
+		void createPboBuffer(optix::Context& ctx);
 	private:
 		std::size_t mLaunchWidth;
 		std::size_t mLaunchHeight;
 		optix::Buffer mOutBuffer;
 		GLuint mPBO;
 		GLuint mTex;
-		unsigned int mLaunchIndex;
-		optix::Context& mContext;
-		// wtf to do with programs
-		std::shared_ptr<SolidColorProgram> mSolidColorProgram;
-		std::shared_ptr<SimpleMissProgram> mSimpleMissProgram;
-		std::shared_ptr<ExceptionProgram> mExceptionProgram;
-		std::shared_ptr<PinholeCameraProgram> mPinholeCameraProgram;
-		// Pano Program
-		bool mTopExists;
-		bool mLightsExist;
 	};
 
 	/** Constructor
@@ -62,74 +50,18 @@ namespace rt {
 	OptiXRenderer::OptiXRenderer(
 		optix::Context& ctx,
 		const std::size_t& width,
-		const std::size_t& height,
-		std::shared_ptr<ptx::PTXCompiler> compiler)
-		: mContext(ctx), 
-		mLaunchWidth(width), 
+		const std::size_t& height)
+		: mLaunchWidth(width), 
 		mLaunchHeight(height)
 	{
-		mTopExists = false;
-		mLightsExist = false;
-		createPboBuffer();
-		// Create Programs
-		/// Solid Color Program
-		//mSolidColorProgram = std::make_shared<SolidColorProgram>(
-		//	mContext,
-		//	std::string("draw_solid_color"),
-		//	std::string("\\res\\ptx\\draw_color.ptx"),
-		//	std::string("..\\src\\CUDA\\draw_color.cu"),
-		//	optix::make_float3(0.2f, 0.2f, 0.2f),
-		//	compiler);
-		///// Simple Miss Program
-		//mSimpleMissProgram = std::make_shared<SimpleMissProgram>(
-		//	mContext,
-		//	std::string("miss"),
-		//	std::string("\\res\\ptx\\simple_miss.ptx"),
-		//	std::string("..\\src\\CUDA\\constantbg.cu"),
-		//	optix::make_float3(0.0f, 0.8f, 0.8f),
-		//	compiler);
-		///// Exception Program
-		//mExceptionProgram = std::make_shared<ExceptionProgram>(
-		//	mContext,
-		//	std::string("exception"),
-		//	std::string("\\res\\ptx\\exception.ptx"),
-		//	std::string("..\\src\\CUDA\\exception.cu"),
-		//	optix::make_float3(1.0f, 0.0f, 0.0f),
-		//	compiler);
-		///// Pinhole Camera Program
-		//mPinholeCameraProgram =
-		//	std::make_shared<PinholeCameraProgram>(
-		//		mContext,
-		//		std::string("pinhole_camera"),
-		//		std::string("\\res\\ptx\\pinhole_camera.ptx"),
-		//		std::string("..\\src\\CUDA\\pinhole_camera.cu"),
-		//		compiler,
-		//		mLaunchWidth, mLaunchHeight);
-		// context related
-		// TODO: add all entry points
-		try {
-			//mContext->setEntryPointCount(2u);
-			//mContext->setRayTypeCount(1u);
-			//mContext->setRayGenerationProgram(0u, mSolidColorProgram->program());
-			//mContext->setExceptionProgram(0u, mExceptionProgram->program());
-			//mContext->setMissProgram(0u, mSimpleMissProgram->program());
-			//mContext->setRayGenerationProgram(1u, mPinholeCameraProgram->program());
-			//mContext->setExceptionProgram(1u, mExceptionProgram->program());
-		}
-		catch (optix::Exception& ex) {
-			LOG_ERROR << ex.getErrorCode() << ": " << ex.getErrorString();
-		}
-		
-		mLaunchIndex = 0u;
-		//mContext->setExceptionProgram(0u, mExceptionProgram->program());
-		//mContext->setMissProgram(0u, mMissProgram->program());
+		createPboBuffer(ctx);
 	}
 
 
 
 	/** Creates output buffer (GL interop)
 	*/
-	void OptiXRenderer::createPboBuffer() {
+	void OptiXRenderer::createPboBuffer(optix::Context& ctx) {
 		glGenBuffers(1, &mPBO);
 		if (mPBO == 0) {
 			LOG_ERROR << "GL ERROR: PBO error";
@@ -150,18 +82,18 @@ namespace rt {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		mOutBuffer = mContext->createBufferFromGLBO(RT_BUFFER_OUTPUT, mPBO);
+		mOutBuffer = ctx->createBufferFromGLBO(RT_BUFFER_OUTPUT, mPBO);
 		mOutBuffer->setFormat(RT_FORMAT_UNSIGNED_BYTE4);
 		mOutBuffer->setSize(mLaunchWidth, mLaunchHeight);
-		mContext["output_buffer"]->setBuffer(mOutBuffer);
-		mContext["scene_epsilon"]->setFloat(1.e-3f);
+		ctx["output_buffer"]->setBuffer(mOutBuffer);
+		ctx["scene_epsilon"]->setFloat(1.e-2f);
 	}
 
 	/** To be called in the game loop
 	*	Renders the scene
 	*/
-	void OptiXRenderer::render() {
-		mContext->launch(mLaunchIndex, mLaunchWidth, mLaunchHeight);
+	void OptiXRenderer::render(const unsigned int& launchIndex, optix::Context& ctx) {
+		ctx->launch(launchIndex, mLaunchWidth, mLaunchHeight);
 		
 		// Query buffer info
 		RTsize bufferWRts, bufferHRts;
@@ -221,12 +153,6 @@ namespace rt {
 		};
 	}
 
-	/**
-	*	Exposes Pinhole Camera's messageFlowIn
-	*/	
-	std::function<void(const comm::CameraMessage&)> OptiXRenderer::pinholeCameraMessageFlowIn() {
-		return mPinholeCameraProgram->messageFlowIn();
-	}
 
 	/**
 	*

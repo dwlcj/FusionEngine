@@ -105,6 +105,17 @@
   <ItemGroup>
     <ClCompile Include="..\src\optix_rendering_system\test_optix_renderer.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\CUDA\constantbg.cu" />
+    <None Include="..\src\CUDA\draw_color.cu" />
+    <None Include="..\src\CUDA\env_camera.cu" />
+    <None Include="..\src\CUDA\env_map_miss.cu" />
+    <None Include="..\src\CUDA\exception.cu" />
+    <None Include="..\src\CUDA\phong.cu" />
+    <None Include="..\src\CUDA\pinhole_camera.cu" />
+    <None Include="..\src\CUDA\solid_color.cu" />
+    <None Include="..\src\CUDA\triangle_mesh.cu" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

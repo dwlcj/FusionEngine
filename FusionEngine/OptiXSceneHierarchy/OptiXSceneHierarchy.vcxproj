@@ -91,6 +91,8 @@
     <ClInclude Include="..\include\optix_scene_hierarchy\geometry_group_component.h" />
     <ClInclude Include="..\include\optix_scene_hierarchy\geometry_instance_component.h" />
     <ClInclude Include="..\include\optix_scene_hierarchy\material_component.h" />
+    <ClInclude Include="..\include\optix_scene_hierarchy\scene_camera.h" />
+    <ClInclude Include="..\include\optix_scene_hierarchy\scene_crown.h" />
     <ClInclude Include="..\include\optix_scene_hierarchy\scene_root.h" />
     <ClInclude Include="..\include\optix_scene_hierarchy\scene_tree.h" />
     <ClInclude Include="..\include\optix_scene_hierarchy\transform_component.h" />

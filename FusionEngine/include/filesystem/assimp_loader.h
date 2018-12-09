@@ -109,7 +109,7 @@ namespace fs {
 			optix::float3 vertex = optix::make_float3(
 				m->mVertices[v].x,
 				m->mVertices[v].y, 
-				m->mVertices[v].z);
+				m->mVertices[v].z + 100.0f);
 			mesh.insertVertex(vertex);
 
 			// normals
@@ -134,9 +134,9 @@ namespace fs {
 				m->mFaces[f].mIndices[1],
 				m->mFaces[f].mIndices[2]);
 			mesh.insertFaceIndices(indices);
+			mesh.insertMaterialIndex(m->mMaterialIndex);
 		}	//	!face loop
 		// material index
-		mesh.insertMaterialIndex(m->mMaterialIndex);
 		mesh.calcBbox();
 		mesh.center();
 		return mesh;

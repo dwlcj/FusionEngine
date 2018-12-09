@@ -39,6 +39,12 @@
     <ClInclude Include="..\include\optix_scene_hierarchy\transform_component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\optix_scene_hierarchy\scene_crown.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\optix_scene_hierarchy\scene_camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\optix_scene_hierarchy\test_scene_hierarchy.cpp">

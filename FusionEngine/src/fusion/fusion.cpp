@@ -146,11 +146,11 @@ int main(int argc, char* argv[]) {
 	std::shared_ptr<map::SceneMapper> sceneMapper =
 		std::make_shared<map::SceneMapper>(ctx);
 	/// OPTIX Renderer
-	std::shared_ptr<rt::OptiXRenderer> optixRenderer =
-		std::make_shared<rt::OptiXRenderer>(ctx, AppWidth, AppHeight, ptxCompiler);
+	//std::shared_ptr<rt::OptiXRenderer> optixRenderer =
+	//	std::make_shared<rt::OptiXRenderer>(ctx, AppWidth, AppHeight, ptxCompiler);
 	/// Scene Tree
 	std::shared_ptr<tree::SceneTree> sceneTree =
-		std::make_shared<tree::SceneTree>(ctx, ptxCompiler, AppWidth, AppHeight);
+		std::make_shared<tree::SceneTree>(ctx, AppWidth, AppHeight);
 	/// UI Related
 	std::shared_ptr<ui::MenuBar> menuBar =
 		std::make_shared<ui::MenuBar>();
@@ -177,8 +177,11 @@ int main(int argc, char* argv[]) {
 	//filesystem->sceneFlowOut().subscribe(sceneMapper->sceneFlowIn());
 	/// FileSystem -> SceneTree
 	filesystem->sceneFlowOut().subscribe(sceneTree->sceneFlowIn());
+
+	/// Viewport Widget -> SceneCrown
+	viewportWidget->pinholeRotationOut().subscribe(sceneTree->crown()->pinholeRotationIn());
 	/// Scene Mapper -> OptiXRenderer
-	sceneMapper->cameraMessageFlowOut().subscribe(optixRenderer->pinholeCameraMessageFlowIn());
+	//sceneMapper->cameraMessageFlowOut().subscribe(optixRenderer->pinholeCameraMessageFlowIn());
 	/// Scen Mapper -> OptiX Renderer
 	//sceneMapper->topObjectFlowOUt().subscribe(optixRenderer->topObjectFlowIn());
 	ImGuiWindowFlags windowFlags = 0;
@@ -204,7 +207,7 @@ int main(int argc, char* argv[]) {
 		*********************/
 		try {
 			ctx->validate();
-			optixRenderer->render();
+			sceneTree->render();
 		}
 		catch (optix::Exception& ex) {
 			LOG_ERROR << ex.getErrorCode() << ": " << ex.getErrorString();
@@ -212,7 +215,7 @@ int main(int argc, char* argv[]) {
 		menuBar->render();
 		/// Render Widgets
 		//ptxCompilerWidget->render();
-		//viewportWidget->render();
+		viewportWidget->render();
 
 		/**********************
 		*	End of Whatevah
